@@ -5,6 +5,7 @@ const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const argon2 = require('argon2');
+const jwt = require('jsonwebtoken');
 
 const port = 3001;
 
@@ -48,6 +49,55 @@ db.connect((err) => {
 });
 
 
+const verifyToken = (req, res, next) => {
+  const token = req.headers['authorization'];
+
+  if (!token) {
+    return res.status(403).send('A token is required for authentication');
+  }
+
+  try {
+    const decoded = jwt.verify(token, 'Comfort-Living');
+    req.user = decoded;
+  } catch (err) {
+    return res.status(401).send('Invalid Token');
+  }
+  return next();
+};
+
+// Endpoint for user login
+app.post('/login', (req, res) => {
+  const { telefoonnummer, wachtwoord } = req.body;
+
+  const sql = 'SELECT * FROM users WHERE telefoonnummer = ?';
+  db.query(sql, [telefoonnummer], (err, results) => {
+    if (err) {
+      console.error('Error fetching data:', err);
+      res.status(500).send('Error logging in');
+      return;
+    }
+
+    if (results.length === 0) {
+      res.status(401).send('User not found');
+      return;
+    }
+
+    const user = results[0];
+
+    if (wachtwoord !== user.wachtwoord) {
+      res.status(401).send('Incorrect password');
+      return;
+    }
+
+    const token = jwt.sign({ id: user.id }, 'Comfort-Living', { expiresIn: '3s' });
+    res.status(200).json({ token });
+  });
+});
+
+// Protected route example
+app.get('/protected', verifyToken, (req, res) => {
+  res.status(200).send('This is a protected route');
+});
 
 
 
