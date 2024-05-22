@@ -2,7 +2,10 @@ import React from 'react';
 
 const Homepage = () => {
   return (
-    <div>home</div>
+    <div>
+      <h1>Welcome to Comfort Living</h1>
+      {/* Add other homepage content here */}
+    </div>
   );
 };
 
