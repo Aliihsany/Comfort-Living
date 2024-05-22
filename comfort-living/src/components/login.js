@@ -3,13 +3,17 @@ import React, { useState } from 'react';
 function Login() {
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
+    rememberMe: false // Nieuwe staat voor de checkbox
   });
 
   const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    const newValue = type === 'checkbox' ? checked : value; // Voor checkbox, gebruik "checked" in plaats van "value"
+    
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: newValue
     });
   };
 
@@ -41,6 +45,8 @@ function Login() {
     <form onSubmit={handleSubmit}>
       <input name="email" placeholder="Email" onChange={handleChange} />
       <input type="password" name="password" placeholder="Wachtwoord" onChange={handleChange} />
+      <input type="checkbox" id="rememberMe" name="rememberMe" checked={formData.rememberMe} onChange={handleChange} />
+      <label htmlFor="rememberMe">Ingelogd blijven</label>
       <button type="submit">Login</button>
     </form>
   );

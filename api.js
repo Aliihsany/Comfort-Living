@@ -48,7 +48,6 @@ db.connect((err) => {
   });
 });
 
-
 const verifyToken = (req, res, next) => {
   const token = req.headers['authorization'];
 
@@ -57,13 +56,20 @@ const verifyToken = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, 'Comfort-Living');
+    const decoded = jwt.verify(token.replace('Bearer ', ''), 'Comfort-Living');
     req.user = decoded;
+
+    // Controleer of de token is verlopen
+    const currentTimestamp = Math.floor(Date.now() / 1000); // huidige tijd in seconden
+    if (decoded.exp < currentTimestamp) {
+      return res.status(401).send('Token has expired');
+    }
   } catch (err) {
     return res.status(401).send('Invalid Token');
   }
   return next();
 };
+
 
 // Endpoint for user login
 app.post('/login', (req, res) => {
@@ -85,12 +91,12 @@ app.post('/login', (req, res) => {
       const user = results[0];
 
       try {
-          if (await argon2.verify(user.password, password)) {
-              const token = jwt.sign({ id: user.id }, 'Comfort-Living', { expiresIn: '3s' });
-              res.status(200).json({ token });
-          } else {
-              res.status(401).send('Incorrect password');
-          }
+        if (await argon2.verify(user.password, password)) {
+          const token = jwt.sign({ id: user.id }, 'Comfort-Living', { expiresIn: '3s' });
+          res.status(200).json({ token });
+      } else {
+          res.status(401).send('Incorrect password');
+      }
       } catch (err) {
           console.error('Error verifying password:', err);
           res.status(500).send('Error logging in');
