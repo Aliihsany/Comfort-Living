@@ -88,7 +88,7 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
         res.status(500).send('Error registering user');
     }
 });
-//test
+//testballer
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
