@@ -67,32 +67,37 @@ const verifyToken = (req, res, next) => {
 
 // Endpoint for user login
 app.post('/login', (req, res) => {
-  const { telefoonnummer, wachtwoord } = req.body;
+  const { email, wachtwoord } = req.body;
 
-  const sql = 'SELECT * FROM users WHERE telefoonnummer = ?';
-  db.query(sql, [telefoonnummer], (err, results) => {
-    if (err) {
-      console.error('Error fetching data:', err);
-      res.status(500).send('Error logging in');
-      return;
-    }
+  const sql = 'SELECT * FROM users WHERE email = ?';
+  db.query(sql, [email], async (err, results) => {
+      if (err) {
+          console.error('Error fetching data:', err);
+          res.status(500).send('Error logging in');
+          return;
+      }
 
-    if (results.length === 0) {
-      res.status(401).send('User not found');
-      return;
-    }
+      if (results.length === 0) {
+          res.status(401).send('User not found');
+          return;
+      }
 
-    const user = results[0];
+      const user = results[0];
 
-    if (wachtwoord !== user.wachtwoord) {
-      res.status(401).send('Incorrect password');
-      return;
-    }
-
-    const token = jwt.sign({ id: user.id }, 'Comfort-Living', { expiresIn: '3s' });
-    res.status(200).json({ token });
+      try {
+          if (await argon2.verify(user.password, wachtwoord)) {
+              const token = jwt.sign({ id: user.id }, 'Comfort-Living', { expiresIn: '3s' });
+              res.status(200).json({ token });
+          } else {
+              res.status(401).send('Incorrect password');
+          }
+      } catch (err) {
+          console.error('Error verifying password:', err);
+          res.status(500).send('Error logging in');
+      }
   });
 });
+
 
 // Protected route example
 app.get('/protected', verifyToken, (req, res) => {
