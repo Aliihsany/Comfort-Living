@@ -1,5 +1,9 @@
 import React from 'react';
-import Homepage from './components/Homepage'
+import Banner from './components/Banner';
+import EasyAccess from './components/Easyaccess';
+import Homepage from './components/Homepage';
+import News from './components/News';
+import './App.css'
 
 const App = () => {
   return (
@@ -17,8 +21,12 @@ const App = () => {
       </nav>
     </header>
 
-
+     
+      <Banner />
+      <EasyAccess />
       <Homepage />
+      <News />
+      
 
       <footer>
       <div className="customer-service">
