@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Banner from './components/Banner';
 import EasyAccess from './components/Easyaccess';
@@ -5,9 +6,11 @@ import Homepage from './components/Homepage';
 import News from './components/News';
 import './App.css'
 
-const App = () => {
+
+function App() {
   return (
     <div className="App">
+
  
  <header>
       <div className="logo">Logo van website</div>
@@ -39,9 +42,9 @@ const App = () => {
         <a href="#">Twitter</a>
       </div>
     </footer>
+
     </div>
-    
   );
-};
+}
 
 export default App;
