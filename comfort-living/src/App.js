@@ -2,7 +2,6 @@
 import React from 'react';
 import Banner from './components/Banner';
 import EasyAccess from './components/Easyaccess';
-import Homepage from './components/Homepage';
 import News from './components/News';
 import './App.css'
 
@@ -27,7 +26,6 @@ function App() {
      
       <Banner />
       <EasyAccess />
-      <Homepage />
       <News />
       
 
