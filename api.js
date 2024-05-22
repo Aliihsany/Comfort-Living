@@ -84,11 +84,11 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
             }
         });
     } catch (err) {
-        console.error('Error hashing password:', err);
+        console.error('Error hashing password tests:', err);
         res.status(500).send('Error registering user');
     }
 });
-
+//test
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
