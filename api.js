@@ -67,7 +67,7 @@ const verifyToken = (req, res, next) => {
 
 // Endpoint for user login
 app.post('/login', (req, res) => {
-  const { email, wachtwoord } = req.body;
+  const { email, password } = req.body;
 
   const sql = 'SELECT * FROM users WHERE email = ?';
   db.query(sql, [email], async (err, results) => {
@@ -85,7 +85,7 @@ app.post('/login', (req, res) => {
       const user = results[0];
 
       try {
-          if (await argon2.verify(user.password, wachtwoord)) {
+          if (await argon2.verify(user.password, password)) {
               const token = jwt.sign({ id: user.id }, 'Comfort-Living', { expiresIn: '3s' });
               res.status(200).json({ token });
           } else {
