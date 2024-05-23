@@ -1,16 +1,13 @@
-import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import React, { useState } from 'react';
 import './App.css';
 import Homepage from './components/Homepage';
-
+import Register from './components/register';
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Homepage />
-      </div>
-    </Router>
+    <div className="App">
+     <Register />
+    </div>
   );
 }
 
