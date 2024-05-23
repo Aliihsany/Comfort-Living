@@ -4,7 +4,7 @@ import './Banner.css';  // Zorg ervoor dat je je CSS-bestand importeert
 const Banner = () => {
   return (
     <div className="banner">
-      <h1>Welkom bij Comfort Living</h1>
+      <h1>Comfort Living <br></br> <br></br>Waar Wonen Eenvoudig Wordt</h1>
     </div>
   );
 };
