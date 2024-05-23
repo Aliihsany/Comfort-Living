@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Homepage from './components/Homepage';
+import AdminPage from './admin/Adminpage'; // Adjusted import path
 
 function App() {
   return (
-    <div className="App">
-     <Homepage />
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/admin/*" element={<AdminPage />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

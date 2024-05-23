@@ -1,23 +1,25 @@
 import React, { useState } from 'react';
 import Banner from './Banner';
-import EasyAccess from './Easyaccess';
+import EasyAccess from './Easyaccess'; 
 import News from './News';
 import Housefilter from './Housefilter';
 import './Homepage.css';
 import Header from './Header';
-
+import Overons from './Overons'; 
+import TermsPopup from './TermsPopup'; 
 
 function Homepage() {
-
-    const [filter, setFilter] = useState({});
+  const [filter, setFilter] = useState({});
   const [houses, setHouses] = useState([
     { id: 1, rooms: 3, size: 120, price: 250000, image: 'house1.jpg' },
     { id: 2, rooms: 4, size: 150, price: 300000, image: 'house2.jpg' },
     { id: 3, rooms: 2, size: 80, price: 200000, image: 'house3.jpg' },
     // Voeg meer huizen toe indien nodig
   ]);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
-const handleFilterChange = (newFilter) => {
+  const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
     console.log('Geselecteerde filter:', newFilter);
   };
@@ -30,6 +32,11 @@ const handleFilterChange = (newFilter) => {
       (filter.maxPrice ? house.price <= filter.maxPrice : true)
     );
   });
+
+  const handleAccept = () => {
+    setTermsAccepted(true);
+    setShowPopup(false);
+  };
 
   return (
     <div>
@@ -53,6 +60,16 @@ const handleFilterChange = (newFilter) => {
       </div>
 
       <News />
+      <Overons /> {/* Include the Overons component */}
+
+      {!termsAccepted && (
+        <div className="terms-bar">
+          <p>By using this site, you accept our <a href="#" onClick={() => setShowPopup(true)}>terms and conditions</a>.</p>
+        </div>
+      )}
+      {showPopup && (
+        <TermsPopup onClose={() => setShowPopup(false)} onAccept={handleAccept} />
+      )}
 
       <footer>
         <div className="customer-service">
@@ -69,4 +86,4 @@ const handleFilterChange = (newFilter) => {
   )
 }
 
-export default Homepage
+export default Homepage;
