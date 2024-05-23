@@ -4,6 +4,7 @@ import EasyAccess from './Easyaccess';
 import News from './News';
 import Housefilter from './Housefilter';
 import './Homepage.css';
+import Header from './Header';
 
 
 function Homepage() {
@@ -32,19 +33,7 @@ const handleFilterChange = (newFilter) => {
 
   return (
     <div>
-      <header>
-  <div className="logo">
-    <img src="../assets/logo.jpg" alt="Logo" />
-  </div>
-  <nav>
-    <a href="#">Ik huur</a>
-    <a href="#">Ik zoek</a>
-    <a href="#">Organisatie</a>
-    <a href="#">Contact</a>
-    <input type="text" placeholder="Search" />
-    <a href="#">Inloggen</a>
-  </nav>
-</header>
+      <Header />
 
       <Banner />
       <EasyAccess />
