@@ -1,14 +1,28 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import './Easyaccess.css';
 
-const EasyAccess = () => {
+const Easyaccess = () => {
   return (
     <div className="easy-access">
-      <button>Reparatie doorgeven</button>
-      <button>Overlast doorgeven</button>
-      <button>Abonnement voor onderhoud</button>
-      <button>Woning zoeken</button>
+      <Link to="/reparatie" className="easy-access-item">
+        <i className="fas fa-wrench"></i>
+        <p>Reparatie doorgeven</p>
+      </Link>
+      <Link to="/overlast" className="easy-access-item">
+        <i className="fas fa-exclamation-triangle"></i>
+        <p>Overlast doorgeven</p>
+      </Link>
+      <Link to="/abonnement" className="easy-access-item">
+        <i className="fas fa-hammer"></i>
+        <p>Abonnement voor onderhoud</p>
+      </Link>
+      <Link to="/woning" className="easy-access-item">
+        <i className="fas fa-home"></i>
+        <p>Woning zoeken</p>
+      </Link>
     </div>
   );
 };
 
-export default EasyAccess;
+export default Easyaccess;

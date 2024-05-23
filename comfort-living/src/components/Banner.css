@@ -1,5 +1,6 @@
 .banner {
     background-image: url('../assets/huisje.png');  /* Vervang dit door het pad naar jouw afbeelding */
+    background-attachment: local;
     background-size: cover;  /* Zorgt ervoor dat de afbeelding de hele container bedekt */
     background-position: center;  /* Centreert de afbeelding */
     height: 40vh;  /* Stelt de hoogte van de banner in, je kunt deze aanpassen naar wens */
@@ -8,8 +9,8 @@
     align-items: center;
     color: white;  /* Verandert de tekstkleur, zodat deze zichtbaar is op de afbeelding */
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);  /* Voegt een schaduw toe aan de tekst voor betere leesbaarheid */
-  }
-  
-  h1 {
+}
+
+h1 {
     font-size: 3em;
-  }
+}

@@ -5,6 +5,7 @@ import News from './News';
 import Housefilter from './Housefilter';
 import './Homepage.css';
 import Header from './Header';
+import Footer from './Footer';
 
 
 function Homepage() {
@@ -54,17 +55,7 @@ const handleFilterChange = (newFilter) => {
 
       <News />
 
-      <footer>
-        <div className="customer-service">
-          <a href="#">Contact</a>
-          <a href="#">Veelgestelde vragen</a>
-        </div>
-        <div className="social-media">
-          <a href="#">Facebook</a>
-          <a href="#">Instagram</a>
-          <a href="#">Twitter</a>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

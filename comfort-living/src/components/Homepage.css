@@ -31,23 +31,6 @@
     height: 100px;
   }
   
-  
-  footer {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-    background-color: #8c8f918e;
-    position: fixed;
-    bottom: 0;
-    width: 98%;
-    text-decoration: none;
-  }
-  
-  footer a{
-    text-decoration: none;
-    color: black;
-  }
-  
   .content {
     display: flex;
   }
