@@ -1,11 +1,11 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
-import Register from './components/register'
+import Homepage from './components/Homepage';
 
 function App() {
   return (
     <div className="App">
-      <Register />
+     <Homepage />
     </div>
   );
 }
