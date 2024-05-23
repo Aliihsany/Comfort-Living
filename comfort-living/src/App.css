@@ -29,7 +29,9 @@ header input {
 }
 
 .banner h1 {
-  color: #dc3545;
+  font-family:Georgia, 'Times New Roman', Times, serif;
+  color: #385E72;
+  text-shadow: black 2px 2px ;
 }
 
 .easy-access {

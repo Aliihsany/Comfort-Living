@@ -6,12 +6,15 @@ const Housefilter = ({ onFilterChange }) => {
     rooms: '',
     size: '',
     minPrice: '',
-    maxPrice: ''
+    maxPrice: '',
+    energyLabel: '', // Nieuw toegevoegd voor energielabel
+    location: '', // Optioneel: locatie filter
+    type: '' // Optioneel: type woning (appartement, huis, etc.)
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFilter({...filter, [name]: value});
+    setFilter({ ...filter, [name]: value });
   };
 
   const handleFilterClick = () => {
@@ -35,6 +38,33 @@ const Housefilter = ({ onFilterChange }) => {
       <div className="filter-section">
         <label>Max. Prijs:</label>
         <input type="number" name="maxPrice" value={filter.maxPrice} onChange={handleChange} />
+      </div>
+      <div className="filter-section">
+        <label>Energielabel:</label>
+        <select name="energyLabel" value={filter.energyLabel} onChange={handleChange}>
+          <option value="">Selecteer energielabel</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="D">D</option>
+          <option value="E">E</option>
+          <option value="F">F</option>
+          <option value="G">G</option>
+        </select>
+      </div>
+      <div className="filter-section">
+        <label>Locatie:</label>
+        <input type="text" name="location" value={filter.location} onChange={handleChange} />
+      </div>
+      <div className="filter-section">
+        <label>Type woning:</label>
+        <select name="type" value={filter.type} onChange={handleChange}>
+          <option value="">Selecteer type woning</option>
+          <option value="appartement">Appartement</option>
+          <option value="huis">Huis</option>
+          <option value="studio">Studio</option>
+          <option value="villa">Villa</option>
+        </select>
       </div>
       <button onClick={handleFilterClick}>Filter</button>
     </div>
