@@ -3,6 +3,9 @@ import Homepage from './components/Homepage';
 import Overons from './components/Overons';
 import About from './components/About';
 import './App.css';
+import Banner from './components/Banner';
+import EasyAccess from './components/Easyaccess';
+import News from './components/News';
 
 const App = () => {
   return (
