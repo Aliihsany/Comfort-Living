@@ -29,7 +29,8 @@ header input {
 }
 
 .banner h1 {
-  color: #dc3545;
+  color: #6AABD2;
+  text-shadow: 2px 2px #082e49;
 }
 
 .easy-access {
