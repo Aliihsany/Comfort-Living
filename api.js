@@ -88,7 +88,7 @@ app.post('/login', (req, res) => {
 
     try {
       if (await argon2.verify(user.password, password)) {
-        const token = jwt.sign({ id: user.id }, 'Comfort-Living', { expiresIn: '3s' });
+        const token = jwt.sign({ id: user.id }, 'Comfort-Living', { expiresIn: '1h' });
         res.status(200).json({ token });
       } else {
         res.status(401).send('Incorrect password');
@@ -104,13 +104,11 @@ app.get('/protected', verifyToken, (req, res) => {
   res.status(200).send('This is a protected route');
 });
 
-// Email validation function
 const validateEmail = (email) => {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(String(email).toLowerCase());
 };
 
-// Create a transporter for Nodemailer
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -119,7 +117,6 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Function to send verification email
 const sendVerificationEmail = (email, token) => {
   const verificationLink = `http://localhost:${port}/verify-email?token=${token}`;
   const mailOptions = {
@@ -135,7 +132,7 @@ const sendVerificationEmail = (email, token) => {
     attachments: [{
       filename: 'logo.png',
       path: path.join(__dirname, 'comfort-living/src/assets/logo.png'),
-      cid: 'unique@logo.png' // same cid value as in the html img src
+      cid: 'unique@logo.png' 
     }]
   };
 
@@ -158,7 +155,6 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
     jaarinkomen,
     voorkeur,
     straal,
-    rol,
     email,
     password
   } = req.body;
@@ -170,7 +166,6 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
   const pdf = req.files['pdf'][0].buffer;
   const bewijsfoto = req.files['bewijsfoto'][0].buffer;
 
-  // Check if email already exists
   const checkEmailQuery = 'SELECT * FROM users WHERE email = ?';
   db.query(checkEmailQuery, [email], async (err, results) => {
     if (err) {
@@ -185,10 +180,10 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
     try {
       const hashedPassword = await argon2.hash(password);
       const verificationToken = jwt.sign({ email }, 'verification-secret', { expiresIn: '15m' });
-      const query = `INSERT INTO users (voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, rol, email, password, verification_token, is_verified) 
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      const query = `INSERT INTO users (voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, password, verification_token, is_verified) 
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
-      db.query(query, [voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, rol, email, hashedPassword, verificationToken, false], (err, result) => {
+      db.query(query, [voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, hashedPassword, verificationToken, false], (err, result) => {
         if (err) {
           console.error('Error inserting user:', err);
           res.status(500).send('Error registering user');
