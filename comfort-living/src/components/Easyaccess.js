@@ -1,6 +1,6 @@
 import React from 'react';
 
-const EasyAccess = () => {
+const Easyaccess = () => {
   return (
     <div className="easy-access">
       <button>Reparatie doorgeven</button>
@@ -11,4 +11,4 @@ const EasyAccess = () => {
   );
 };
 
-export default EasyAccess;
+export default Easyaccess;

@@ -3,6 +3,7 @@ import Banner from './components/Banner';
 import EasyAccess from './components/Easyaccess';
 import News from './components/News';
 import Housefilter from './components/Housefilter';
+import Overons from './components/Overons';
 import './App.css';
 
 function App() {
@@ -11,12 +12,12 @@ function App() {
     { id: 1, rooms: 3, size: 120, price: 250000, image: 'house1.jpg' },
     { id: 2, rooms: 4, size: 150, price: 300000, image: 'house2.jpg' },
     { id: 3, rooms: 2, size: 80, price: 200000, image: 'house3.jpg' },
-    // Voeg meer huizen toe indien nodig
+    // Add more houses as needed
   ]);
 
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
-    console.log('Geselecteerde filter:', newFilter);
+    console.log('Selected filter:', newFilter);
   };
 
   const filteredHouses = houses.filter(house => {
@@ -31,18 +32,18 @@ function App() {
   return (
     <div className="App">
       <header>
-  <div className="logo">
-    <img src="../assets/logo.jpg" alt="News" />
-  </div>
-  <nav>
-    <a href="#">Ik huur</a>
-    <a href="#">Ik zoek</a>
-    <a href="#">Organisatie</a>
-    <a href="#">Contact</a>
-    <input type="text" placeholder="Search" />
-    <a href="#">Inloggen</a>
-  </nav>
-</header>
+        <div className="logo">
+          <img src="../assets/logo.jpg" alt="Logo" />
+        </div>
+        <nav>
+          <a href="#">Ik huur</a>
+          <a href="#">Ik zoek</a>
+          <a href="#">Organisatie</a>
+          <a href="#">Contact</a>
+          <input type="text" placeholder="Search" />
+          <a href="#">Inloggen</a>
+        </nav>
+      </header>
 
       <Banner />
       <EasyAccess />
@@ -62,6 +63,7 @@ function App() {
       </div>
 
       <News />
+      <Overons /> {/* Include the Overons component */}
 
       <footer>
         <div className="customer-service">
