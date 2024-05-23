@@ -102,6 +102,8 @@ app.post('/login', (req, res) => {
 
 app.get('/protected', verifyToken, (req, res) => {
   res.status(200).send('This is a protected route');
+  console.log(req.verifyToken);
+  console.log(verifyToken);
 });
 
 const validateEmail = (email) => {
@@ -123,18 +125,22 @@ const sendVerificationEmail = (email, token) => {
     from: process.env.EMAIL_USER,
     to: email,
     subject: 'Email Verification',
-    html: `<div style="text-align: center;">
-             <img src="cid:unique@logo.png" alt="logo" width="150" height="150" />
-             <p>Click the link below to verify your email:</p>
-             <p><a href="${verificationLink}">Verify Email</a></p>
-             <p>The link is valid for 15 minutes.</p>
-           </div>`,
+    html: `
+      <div style="text-align: center; font-family: Arial, sans-serif; color: #333;">
+        <img src="cid:unique@logo.png" alt="logo" width="150" height="150" style="margin-bottom: 20px;" />
+        <p style="font-size: 18px; margin-bottom: 20px;">Click the link below to verify your email:</p>
+        <a href="${verificationLink}" style="display: inline-block; padding: 10px 20px; font-size: 18px; color: #fff; background-color: #007BFF; text-decoration: none; border-radius: 5px; margin-bottom: 20px;">Verify Email</a>
+        <p style="font-size: 14px; color: #666;">The link is valid for 15 minutes.</p>
+      </div>
+    `,
     attachments: [{
       filename: 'logo.png',
       path: path.join(__dirname, 'comfort-living/src/assets/logo.png'),
       cid: 'unique@logo.png' 
     }]
   };
+
+
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
@@ -224,6 +230,18 @@ app.get('/verify-email', (req, res) => {
       res.status(400).send('Invalid or expired token');
     }
   }
+});
+
+app.get('/users', (req, res) => {
+  const sql = 'SELECT * FROM users';
+  db.query(sql, (err, results) => {
+      if (err) {
+          console.error('Error fetching data:', err);
+          res.status(500).send('Server error');
+          return;
+      }
+      res.json(results);
+  });
 });
 
 app.listen(port, () => {

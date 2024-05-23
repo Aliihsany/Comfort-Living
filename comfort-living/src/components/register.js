@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import './css/Register.css'; 
+import './Register.css'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope, faLock, faHome, faPhone, faMoneyBill, faGlobe, faRuler, faFilePdf, faCamera, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -154,6 +154,7 @@ const Register = () => {
 
     return (
         <>
+
             <form onSubmit={handleSubmit} className="register-form">
                 <h1 style={{position: 'relative', bottom: '10px'}}>Register</h1>
                 <div className="flex-container">
