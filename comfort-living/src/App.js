@@ -1,12 +1,22 @@
+
 import React from 'react';
 import Homepage from './components/Homepage';
 import Overons from './components/Overons';
 import About from './components/About';
 import './App.css';
 
-const App = () => {
+import React from 'react';
+import Banner from './components/Banner';
+import EasyAccess from './components/Easyaccess';
+import Homepage from './components/Homepage';
+import News from './components/News';
+import './App.css'
+
+
+function App() {
   return (
     <div className="App">
+
       <header>
         <div className="logo">Logo van website</div>
         <nav>
@@ -18,24 +28,25 @@ const App = () => {
           <a href="#">Inloggen</a>
         </nav>
       </header>
-
+     
+      <Banner />
+      <EasyAccess />
       <Homepage />
-      <About />
-      <Overons />
 
       <footer>
-        <div className="customer-service">
-          <a href="#">Contact</a>
-          <a href="#">Veelgestelde vragen</a>
-        </div>
-        <div className="social-media">
-          <a href="#">Facebook</a>
-          <a href="#">Instagram</a>
-          <a href="#">Twitter</a>
-        </div>
-      </footer>
+      <div className="customer-service">
+        <a href="#">Contact</a>
+        <a href="#">Veelgestelde vragen</a>
+      </div>
+      <div className="social-media">
+        <a href="#">Facebook</a>
+        <a href="#">Instagram</a>
+        <a href="#">Twitter</a>
+      </div>
+    </footer>
     </div>
+    
   );
-};
+}
 
 export default App;
