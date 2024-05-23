@@ -1,3 +1,4 @@
+// api.js
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -24,134 +25,132 @@ const dbConfig = {
     waitForConnections: true,
     connectionLimit: 15,
     queueLimit: 0
-  };
+};
 
-  const db = mysql.createConnection(dbConfig);
+const db = mysql.createConnection(dbConfig);
+
+db.connect((err) => {
+    if (err) {
+        console.error('Error connecting to database:', err);
+        return;
+    }
+    console.log('Connected to database');
+
+    sqlCommands.forEach((sql) => {
+      db.query(sql, (err, result) => {
+        if (err) {
+          console.error('Error executing SQL command:', err);
+        }
+      });
+    });
+  });
+
+app.post('/filter-panden', (req, res) => {
+    const { aantal, grootte, min, max, energielabel, locatie, type } = req.body;
+
+    let query = 'SELECT * FROM panden WHERE 1=1';
+    const queryParams = [];
+
+    if (aantal) {
+        query += ' AND aantal = ?';
+        queryParams.push(aantal);
+    }
+
+    if (grootte) {
+        query += ' AND grootte >= ?';
+        queryParams.push(grootte);
+    }
+
+    if (min) {
+        query += ' AND min >= ?';
+        queryParams.push(min);
+    }
+
+    if (max) {
+        query += ' AND max <= ?';
+        queryParams.push(max);
+    }
+
+    if (energielabel) {
+        query += ' AND energielabel = ?';
+        queryParams.push(energielabel);
+    }
+
+    if (locatie) {
+        query += ' AND locatie LIKE ?';
+        queryParams.push(`%${locatie}%`);
+    }
+
+    if (type) {
+        query += ' AND type = ?';
+        queryParams.push(type);
+    }
+
+    db.query(query, queryParams, (err, results) => {
+        if (err) {
+            console.error('Error fetching data:', err);
+            res.status(500).send('Error fetching data');
+            return;
+        }
+
+        res.status(200).json(results);
+    });
+});
 
 const sqlCommands = [
-  "SET GLOBAL wait_timeout = 2880000;",
-  "SET GLOBAL max_allowed_packet = 671088640;"
+    "SET GLOBAL wait_timeout = 2880000;",
+    "SET GLOBAL max_allowed_packet = 671088640;"
 ];
 
 db.connect((err) => {
-  if (err) {
-    console.error('Error connecting to database:', err);
-    return;
-  }
-  console.log('Connected to database');
-  sqlCommands.forEach((sql) => {
-    db.query(sql, (err, result) => {
-      if (err) {
-        console.error('Error executing SQL command:', err);
-      }
+    if (err) {
+        console.error('Error connecting to database:', err);
+        return;
+    }
+    console.log('Connected to database');
+    sqlCommands.forEach((sql) => {
+        db.query(sql, (err, result) => {
+            if (err) {
+                console.error('Error executing SQL command:', err);
+            }
+        });
     });
-  });
 });
 
 const verifyToken = (req, res, next) => {
-  const token = req.headers['authorization'];
+    const token = req.headers['authorization'];
 
-  if (!token) {
-    return res.status(403).send('A token is required for authentication');
-  }
-
-  try {
-    const decoded = jwt.verify(token.replace('Bearer ', ''), 'Comfort-Living');
-    req.user = decoded;
-
-    // Controleer of de token is verlopen
-    const currentTimestamp = Math.floor(Date.now() / 1000); // huidige tijd in seconden
-    if (decoded.exp < currentTimestamp) {
-      return res.status(401).send('Token has expired');
+    if (!token) {
+        return res.status(403).send('A token is required for authentication');
     }
-  } catch (err) {
-    return res.status(401).send('Invalid Token');
-  }
-  return next();
+
+    try {
+        const decoded = jwt.verify(token.replace('Bearer ', ''), 'Comfort-Living');
+        req.user = decoded;
+
+        const currentTimestamp = Math.floor(Date.now() / 1000); // huidige tijd in seconden
+        if (decoded.exp < currentTimestamp) {
+            return res.status(401).send('Token has expired');
+        }
+    } catch (err) {
+        return res.status(401).send('Invalid Token');
+    }
+    return next();
 };
 
-
-// Endpoint for user login
-app.post('/login', (req, res) => {
-  const { email, password } = req.body;
-
-  const sql = 'SELECT * FROM users WHERE email = ?';
-  db.query(sql, [email], async (err, results) => {
-      if (err) {
-          console.error('Error fetching data:', err);
-          res.status(500).send('Error logging in');
-          return;
-      }
-
-      if (results.length === 0) {
-          res.status(401).send('User not found');
-          return;
-      }
-
-      const user = results[0];
-
-      try {
-        if (await argon2.verify(user.password, password)) {
-          const token = jwt.sign({ id: user.id }, 'Comfort-Living', { expiresIn: '3s' });
-          res.status(200).json({ token });
-      } else {
-          res.status(401).send('Incorrect password');
-      }
-      } catch (err) {
-          console.error('Error verifying password:', err);
-          res.status(500).send('Error logging in');
-      }
+// Endpoint voor gebruikerslogin en andere endpoints...
+app.get('/panden', (req, res) => {
+  const sql = 'SELECT * FROM panden';
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Error fetching data:', err);
+      res.status(500).send('Server error');
+      return;
+    }
+    res.json(results);
   });
 });
 
-
-// Protected route example
-app.get('/protected', verifyToken, (req, res) => {
-  res.status(200).send('This is a protected route');
-});
-
-
-
-app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), async (req, res) => {
-    const {
-        voornaam,
-        achternaam,
-        geslacht,
-        geboortedatum,
-        woonadres,
-        telefoonnummer,
-        jaarinkomen,
-        voorkeur,
-        straal,
-        rol,
-        email,
-        password
-    } = req.body;
-
-    const pdf = req.files['pdf'][0].buffer;
-    const bewijsfoto = req.files['bewijsfoto'][0].buffer;
-
-    try {
-        const hashedPassword = await argon2.hash(password);
-        const query = `INSERT INTO users (voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, rol, email, password) 
-                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-
-        db.query(query, [voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, rol, email, hashedPassword], (err, result) => {
-            if (err) {
-                console.error('Error inserting user:', err);
-                res.status(500).send('Error registering user');
-            } else {
-                res.status(200).send('User registered successfully');
-            }
-        });
-    } catch (err) {
-        console.error('Error hashing password tests:', err);
-        res.status(500).send('Error registering user');
-    }
-});
-//testballer
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
-
-  
