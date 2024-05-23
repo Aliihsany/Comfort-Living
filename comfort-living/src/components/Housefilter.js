@@ -15,10 +15,7 @@ const Housefilter = ({ onFilterChange }) => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFilter({ ...filter, [name]: value });
-    };
-
-    const handleFilterClick = () => {
-        onFilterChange(filter);
+        onFilterChange({ ...filter, [name]: value }); // Stuur de bijgewerkte filter naar de oudercomponent
     };
 
     return (
@@ -66,7 +63,6 @@ const Housefilter = ({ onFilterChange }) => {
                     <option value="villa">Villa</option>
                 </select>
             </div>
-            <button onClick={handleFilterClick}>Filter</button>
         </div>
     );
 };
