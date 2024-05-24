@@ -2,7 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Homepage from './components/Homepage';
+import Login from './components/Login';
 import RegisterPage from './components/register';
+import VerifyEmail from './components/VerifyEmail';
 import PrivateRoute from './components/PrivateRoute';
 import AdminPage from './admin/Adminpage'; // Adjusted import path
 import WoningToevoegen from './admin/Woningtoevoegen';
