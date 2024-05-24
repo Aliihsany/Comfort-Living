@@ -10,6 +10,9 @@ import AdminPage from './admin/Adminpage'; // Adjusted import path
 import WoningToevoegen from './admin/Woningtoevoegen';
 import Userpage from './admin/Userpage';
 
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 function App() {
   return (
     <Router>
