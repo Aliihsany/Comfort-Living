@@ -50,7 +50,7 @@ const Header = () => {
           <li>
             <input type="text" placeholder="Search" />
           </li>
-          <li><a href="#">Inloggen</a></li>
+          <li><a href="/login">Inloggen</a></li>
         </ul>
       </nav>
     </header>

@@ -42,8 +42,7 @@ header {
   }
   
   .dropdown {
-    position: absolute;
-    top: 100%;
+    
     left: 0;
     background-color: #fff;
     border: 1px solid #ddd;
@@ -56,6 +55,8 @@ header {
   
   nav ul li:hover .dropdown {
     display: block;
+    position: absolute;
+    left: -50px;
   }
   
   .dropdown li {

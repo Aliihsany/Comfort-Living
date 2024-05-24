@@ -43,6 +43,7 @@ function Homepage() {
 
   return (
     <div className="App">
+        
       <Header />
 
       <Banner />
