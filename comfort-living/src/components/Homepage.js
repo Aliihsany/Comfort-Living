@@ -5,9 +5,11 @@ import News from './News';
 import Housefilter from './Housefilter';
 import axios from 'axios';
 import './Homepage.css';
+import Slider from "react-slick";
 
 function Homepage() {
   const [filter, setFilter] = useState({
+    afbeelding: '',
     aantal: '',
     grootte: '',
     min: '',
@@ -35,6 +37,24 @@ function Homepage() {
 
     fetchPanden();
   }, []);
+
+  const images = [
+    "https://via.placeholder.com/600x400/ff0000/ffffff?text=Image+1",
+    "https://via.placeholder.com/600x400/00ff00/ffffff?text=Image+2",
+    "https://via.placeholder.com/600x400/0000ff/ffffff?text=Image+3",
+    "https://via.placeholder.com/600x400/ffff00/000000?text=Image+4",
+    "https://via.placeholder.com/600x400/00ffff/000000?text=Image+5"
+  ];
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000
+  };
 
   const filteredPanden = panden.filter(pand => {
     return (
@@ -67,12 +87,22 @@ function Homepage() {
       <Banner />
       <Easyaccess />
 
+      <div className="carousel-root">
+        <Slider {...settings} className="carousel">
+          {images.map((image, index) => (
+            <div key={index} className="slide">
+              <img src={image} alt={`Slide ${index + 1}`} />
+            </div>
+          ))}
+        </Slider>
+      </div>
+
       <div className="content">
         <Housefilter onFilterChange={handleFilterChange} />
         <div className="house-list">
           {filteredPanden.map(pand => (
             <div key={pand.id} className="house-item">
-              <img src={pand.image} alt={`House ${pand.id}`} />
+              <img src={pand.afbeelding} alt={`House ${pand.id}`} />
               <p>Kamers: {pand.aantal}</p>
               <p>Grootte: {pand.grootte} m²</p>
               <p>Min. prijs: €{pand.min}</p>

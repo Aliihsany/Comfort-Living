@@ -53,11 +53,11 @@
   }
   
   .house-filter {
-    width: 200px; /* Breedte van de filter sectie aanpassen */
+    width: 200px; 
   }
   
   .house-list {
-    flex: 1; /* Foto's nemen de rest van de beschikbare ruimte in beslag */
+    flex: 1; 
     display: flex;
     flex-wrap: wrap;
   }
@@ -75,3 +75,27 @@
     height: auto;
     border-radius: 5px;
   }
+
+/* Carousel styling */
+.carousel-root {
+  position: relative;
+  width: 100%; /* Volledige breedte van het scherm */
+  height: 400px; /* Verklein de hoogte van de carousel-container */
+  overflow: hidden;
+  padding: 20px 0; /* Optioneel: voeg padding toe rond de carousel-container */
+  box-sizing: border-box; /* Inclusief padding in de hoogte/breedte berekeningen */
+}
+
+.carousel .slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel img {
+  width: 100%; /* De afbeelding neemt de volledige breedte van de slide in */
+  height: 100%; /* De afbeelding neemt de volledige hoogte van de slide in */
+  object-fit: cover; /* Behoudt de verhouding van de afbeelding en vult de container */
+  border-radius: 10px; /* Optioneel: voegt afgeronde hoeken toe aan de afbeeldingen */
+}
+

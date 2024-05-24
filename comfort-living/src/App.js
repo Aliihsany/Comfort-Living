@@ -6,6 +6,9 @@ import VerifyEmail from './components/VerifyEmail';
 import Homepage from './components/Homepage';
 import RegisterPage from './components/register';
 
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 function App() {
   return (
     <Router>
