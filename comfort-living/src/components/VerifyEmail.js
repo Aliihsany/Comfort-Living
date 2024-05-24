@@ -42,6 +42,7 @@ const VerifyEmail = () => {
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <form onSubmit={handleSubmit} style={{ width: '300px' }}>
         <h2>Resend Verification Email</h2>
+        <br></br><br></br>
         {message && <p style={{ color: 'green' }}>{message}</p>}
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <div style={{ marginBottom: '15px' }}>
@@ -57,6 +58,8 @@ const VerifyEmail = () => {
         <button type="submit" style={{ width: '100%', padding: '10px', backgroundColor: '#007BFF', color: 'white', border: 'none' }}>
           Resend Verification Email
         </button>
+        <br></br><br></br>
+        <a href='/'>Email is geverifieerd, ga naar Home</a>
       </form>
     </div>
   );

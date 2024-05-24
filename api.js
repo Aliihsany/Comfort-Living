@@ -62,10 +62,21 @@ const verifyToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, 'Comfort-Living');
     req.user = decoded;
+
+    const sql = 'SELECT is_verified FROM users WHERE id = ?';
+    db.query(sql, [decoded.id], (err, results) => {
+      if (err) {
+        return res.status(500).send('Error checking verification status');
+      }
+      if (results.length > 0 && results[0].is_verified) {
+        return next();
+      } else {
+        return res.status(403).send('Email not verified');
+      }
+    });
   } catch (err) {
     return res.status(401).send('Invalid Token');
   }
-  return next();
 };
 
 app.post('/login', (req, res) => {
@@ -96,6 +107,20 @@ app.post('/login', (req, res) => {
     } catch (err) {
       console.error('Error verifying password:', err);
       res.status(500).send('Error logging in');
+    }
+  });
+});
+
+app.get('/check-verification', verifyToken, (req, res) => {
+  const sql = 'SELECT is_verified FROM users WHERE id = ?';
+  db.query(sql, [req.user.id], (err, results) => {
+    if (err) {
+      return res.status(500).send('Error checking verification status');
+    }
+    if (results.length > 0) {
+      res.status(200).json({ isVerified: results[0].is_verified });
+    } else {
+      res.status(404).send('User not found');
     }
   });
 });
@@ -140,49 +165,6 @@ const sendVerificationEmail = (email, token) => {
     }]
   };
 
-  app.post('/resend-verification', (req, res) => {
-    const { email } = req.body;
-  
-    const checkEmailQuery = 'SELECT * FROM users WHERE email = ?';
-    db.query(checkEmailQuery, [email], async (err, results) => {
-      if (err) {
-        console.error('Error checking email:', err);
-        return res.status(500).send('Error checking email');
-      }
-  
-      if (results.length === 0) {
-        console.log('Email not found');
-        return res.status(404).send('Email not found');
-      }
-  
-      const user = results[0];
-  
-      if (user.is_verified) {
-        console.log('Email is already verified');
-        return res.status(400).send('Email is already verified');
-      }
-  
-      try {
-        const verificationToken = jwt.sign({ email }, 'verification-secret', { expiresIn: '15m' });
-        const updateQuery = 'UPDATE users SET verification_token = ? WHERE email = ?';
-  
-        db.query(updateQuery, [verificationToken, email], (err, result) => {
-          if (err) {
-            console.error('Error updating verification token:', err);
-            res.status(500).send('Error sending verification email');
-          } else {
-            sendVerificationEmail(email, verificationToken);
-            res.status(200).send('Verification email sent');
-          }
-        });
-      } catch (err) {
-        console.error('Error generating verification token:', err);
-        res.status(500).send('Error sending verification email');
-      }
-    });
-  });
-
-
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       return console.error('Error sending email:', error);
@@ -190,6 +172,48 @@ const sendVerificationEmail = (email, token) => {
     console.log('Verification email sent:', info.response);
   });
 };
+
+app.post('/resend-verification', (req, res) => {
+  const { email } = req.body;
+
+  const checkEmailQuery = 'SELECT * FROM users WHERE email = ?';
+  db.query(checkEmailQuery, [email], async (err, results) => {
+    if (err) {
+      console.error('Error checking email:', err);
+      return res.status(500).send('Error checking email');
+    }
+
+    if (results.length === 0) {
+      console.log('Email not found');
+      return res.status(404).send('Email not found');
+    }
+
+    const user = results[0];
+
+    if (user.is_verified) {
+      console.log('Email is already verified');
+      return res.status(400).send('Email is already verified');
+    }
+
+    try {
+      const verificationToken = jwt.sign({ email }, 'verification-secret', { expiresIn: '15m' });
+      const updateQuery = 'UPDATE users SET verification_token = ? WHERE email = ?';
+
+      db.query(updateQuery, [verificationToken, email], (err, result) => {
+        if (err) {
+          console.error('Error updating verification token:', err);
+          res.status(500).send('Error sending verification email');
+        } else {
+          sendVerificationEmail(email, verificationToken);
+          res.status(200).send('Verification email sent');
+        }
+      });
+    } catch (err) {
+      console.error('Error generating verification token:', err);
+      res.status(500).send('Error sending verification email');
+    }
+  });
+});
 
 app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), async (req, res) => {
   const {
@@ -275,6 +299,30 @@ app.get('/verify-email', (req, res) => {
 
 app.get('/users', (req, res) => {
   const sql = 'SELECT * FROM users';
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Error fetching data:', err);
+      res.status(500).send('Server error');
+      return;
+    }
+    res.json(results);
+  });
+});
+
+app.get('/panden', (req, res) => {
+  const sql = 'SELECT * FROM panden';
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Error fetching data:', err);
+      res.status(500).send('Server error');
+      return;
+    }
+    res.json(results);
+  });
+});
+
+app.get('/panden', (req, res) => {
+  const sql = 'SELECT * FROM panden';
   db.query(sql, (err, results) => {
       if (err) {
           console.error('Error fetching data:', err);

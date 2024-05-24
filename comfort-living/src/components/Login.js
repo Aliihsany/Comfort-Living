@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import log from 'loglevel';
 
-// Configure loglevel
-if (process.env.NODE_ENV === 'production') {
-  log.setLevel('warn');
-} else {
-  log.setLevel('debug');
-}
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -25,12 +19,10 @@ const Login = () => {
       });
       if (response.status === 200) {
         localStorage.setItem('token', response.data.token);
-        alert('Login successful');
         setError('');
         setUnverified(false);
       }
     } catch (error) {
-      log.error('Error during login:', error);
       if (error.response && error.response.status === 401 && error.response.data === 'Email not verified') {
         setUnverified(true);
         setError('');
@@ -41,12 +33,19 @@ const Login = () => {
     }
   };
 
-  log.debug('Login component rendered');
+  const handleClick = () => {
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 3000);
+    
+  };
+
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <form onSubmit={handleSubmit} style={{ width: '300px' }}>
         <h2>Login</h2>
+        <br></br><br></br>
         {error && <p style={{ color: 'red' }}>{error}</p>}
         {unverified && <p style={{ color: 'orange' }}>Your email is not verified. <Link to="/verify-email">Resend Verification Email</Link></p>}
         <div style={{ marginBottom: '15px' }}>
@@ -69,9 +68,11 @@ const Login = () => {
             style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
           />
         </div>
-        <button type="submit" style={{ width: '100%', padding: '10px', backgroundColor: '#007BFF', color: 'white', border: 'none' }}>
+        <button  onClick={handleClick} type="submit" style={{ width: '100%', padding: '10px', backgroundColor: '#007BFF', color: 'white', border: 'none' }}>
           Login
         </button>
+        <br></br><br></br>
+        <p><a href="/register" style={{ color: '#007BFF', textDecoration: 'none' }}>Registeren?</a></p>
       </form>
     </div>
   );

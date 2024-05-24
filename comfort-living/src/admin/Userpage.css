@@ -1,0 +1,54 @@
+.sidebar{
+position: absolute;
+}
+.users-page {
+    padding: 20px;
+    width: 50%;
+    z-index: 999;
+    position: fixed;
+    left: 350px;
+  }
+  
+  .users-page h1 {
+    margin-bottom: 20px;
+  }
+  
+  .users-page input {
+    padding: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .users-page table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .users-page table th, .users-page table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  .users-page table th {
+    background-color: #f4f4f4;
+  }
+  
+  .users-page table td {
+    text-align: left;
+  }
+  
+  .users-page table button {
+    padding: 5px 10px;
+    cursor: pointer;
+    background-color: #ff3366;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .users-page table button:hover {
+    background-color: #cc0022;
+  }
+  
