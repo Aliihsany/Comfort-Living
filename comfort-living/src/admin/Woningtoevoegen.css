@@ -1,11 +1,17 @@
 .woningtoevoegen {
     padding: 20px;
-    max-width: 600px;
+    max-width: 100%;
     margin: auto;
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
+    z-index: 999;
+    position: fixed;
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+}
+
   
   .woningtoevoegen h1 {
     margin-bottom: 20px;
@@ -71,4 +77,7 @@
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
+  .sidebar{
+    position: absolute;
+    }
   

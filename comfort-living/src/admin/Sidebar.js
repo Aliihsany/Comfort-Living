@@ -1,14 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Sidebar.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
-const Sidebar = () => {
+
+const  Sidebar= () => {
   return (
     <div className="sidebar">
-      <Link to="/admin/woningtoevoegen">Add Residence</Link>
-      <Link to="/admin/residents">Residents</Link>
-      <Link to="/admin/residences">Residences</Link>
-      <Link to="/admin/request">Request</Link>
+      <a href="/"><FontAwesomeIcon icon={faArrowLeft} /></a>
+      <Link to="/woningtoevoegen">Add Residence</Link>
+      <Link to="/userpage">Users</Link>
     </div>
   );
 };

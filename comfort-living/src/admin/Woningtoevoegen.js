@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Woningtoevoegen.css';
+import Sidebar from './Sidebar';
 
 const Woningtoevoegen = () => {
   const [name, setName] = useState('');
@@ -8,12 +9,13 @@ const Woningtoevoegen = () => {
   const [serviceCosts, setServiceCosts] = useState('');
   const [description, setDescription] = useState('');
   const [images, setImages] = useState([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const newResidence = { name, location, price, serviceCosts, description, images };
 
-    fetch('http://localhost:3000/residences', {
+    fetch('http://localhost:3001/residences', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -30,6 +32,7 @@ const Woningtoevoegen = () => {
       setServiceCosts('');
       setDescription('');
       setImages([]);
+      setCurrentImageIndex(0);
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -38,18 +41,30 @@ const Woningtoevoegen = () => {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const validTypes = ['image/jpeg', 'image/png'];
     const validFiles = files.filter(file => validTypes.includes(file.type));
 
     if (validFiles.length !== files.length) {
-      alert('Only JPG, PNG, or WebP files are allowed.');
+      alert('Only JPG and PNG files are allowed.');
     }
 
     const imageUrls = validFiles.map(file => URL.createObjectURL(file));
-    setImages(imageUrls);
+    setImages(prevImages => [...prevImages, ...imageUrls]);
+    setCurrentImageIndex(0); // Reset to the first image when new images are added
+  };
+
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
   };
 
   return (
+    <div className="sidebar">
+        <Sidebar />
+
     <div className="woningtoevoegen">
       <h1>Voeg Woning toe</h1>
       <form onSubmit={handleSubmit}>
@@ -62,7 +77,7 @@ const Woningtoevoegen = () => {
           <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} required />
         </label>
         <label>
-          Prijs:
+          Huurkosten:
           <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} required />
         </label>
         <label>
@@ -75,15 +90,20 @@ const Woningtoevoegen = () => {
         </label>
         <label>
           Afbeeldingen:
-          <input type="file" multiple onChange={handleImageChange} accept=".jpg,.jpeg,.png." />
+          <input type="file" multiple onChange={handleImageChange} accept=".jpg,.jpeg,.png" />
         </label>
-        <div className="image-preview">
-          {images.map((image, index) => (
-            <img key={index} src={image} alt={`Preview ${index}`} />
-          ))}
+        <div className="image-slider">
+          {images.length > 0 && (
+            <>
+              <button type="button" onClick={prevImage}>Previous</button>
+              <img src={images[currentImageIndex]} alt={`Preview ${currentImageIndex}`} />
+              <button type="button" onClick={nextImage}>Next</button>
+            </>
+          )}
         </div>
         <button type="submit">Voeg woning toe</button>
       </form>
+    </div>
     </div>
   );
 };

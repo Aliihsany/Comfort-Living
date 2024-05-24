@@ -1,10 +1,10 @@
 .sidebar {
     width: 200px;
-    height: 100vh;
+    height: 100%;
     background-color: #f4f4f4;
     display: flex;
     flex-direction: column;
-    padding: 10px;
+    /*padding: 10px;*/
     box-shadow: 2px 0 5px rgba(0,0,0,0.1);
   }
   
@@ -19,5 +19,10 @@
   
   .sidebar a:hover {
     background-color: #ddd;
+  }
+  
+  .back-button {
+    font-size: 16px;
+    font-weight: bold;
   }
   
