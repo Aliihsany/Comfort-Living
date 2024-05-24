@@ -1,5 +1,5 @@
 import React from 'react';
-import './Banner.css';  // Zorg ervoor dat je je CSS-bestand importeert
+import './Banner.css';  
 
 const Banner = () => {
   return (

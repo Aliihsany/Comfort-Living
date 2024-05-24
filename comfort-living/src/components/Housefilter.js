@@ -7,9 +7,9 @@ const Housefilter = ({ onFilterChange }) => {
     size: '',
     minPrice: '',
     maxPrice: '',
-    energyLabel: '', // Nieuw toegevoegd voor energielabel
-    location: '', // Optioneel: locatie filter
-    type: '' // Optioneel: type woning (appartement, huis, etc.)
+    energyLabel: '',
+    location: '', 
+    type: '' 
   });
 
   const handleChange = (e) => {

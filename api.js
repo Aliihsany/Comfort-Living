@@ -321,6 +321,26 @@ app.get('/panden', (req, res) => {
   });
 });
 
+app.get('/users/:id', verifyToken, (req, res) => {
+  const userId = req.user.id;
+  const sql = 'SELECT * FROM users WHERE id = ?';
+
+  db.query(sql, [userId], (err, result) => {
+    if (err) {
+      console.error('Error fetching user:', err);
+      res.status(500).send('Server error');
+      return;
+    }
+
+    if (result.length === 0) {
+      res.status(404).send('User not found');
+      return;
+    }
+
+    res.json(result[0]);
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
