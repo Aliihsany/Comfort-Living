@@ -88,7 +88,7 @@ app.post('/login', (req, res) => {
 
     try {
       if (await argon2.verify(user.password, password)) {
-        const token = jwt.sign({ id: user.id }, 'Comfort-Living', { expiresIn: '3s' });
+        const token = jwt.sign({ id: user.id }, 'Comfort-Living', { expiresIn: '1h' });
         res.status(200).json({ token });
       } else {
         res.status(401).send('Incorrect password');
@@ -102,15 +102,15 @@ app.post('/login', (req, res) => {
 
 app.get('/protected', verifyToken, (req, res) => {
   res.status(200).send('This is a protected route');
+  console.log(req.verifyToken);
+  console.log(verifyToken);
 });
 
-// Email validation function
 const validateEmail = (email) => {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(String(email).toLowerCase());
 };
 
-// Create a transporter for Nodemailer
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -119,25 +119,69 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Function to send verification email
 const sendVerificationEmail = (email, token) => {
   const verificationLink = `http://localhost:${port}/verify-email?token=${token}`;
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
     subject: 'Email Verification',
-    html: `<div style="text-align: center;">
-             <img src="cid:unique@logo.png" alt="logo" width="150" height="150" />
-             <p>Click the link below to verify your email:</p>
-             <p><a href="${verificationLink}">Verify Email</a></p>
-             <p>The link is valid for 15 minutes.</p>
-           </div>`,
+    html: `
+      <div style="text-align: center; font-family: Arial, sans-serif; color: #333;">
+        <img src="cid:unique@logo.png" alt="logo" width="150" height="150" style="margin-bottom: 20px;" />
+        <p style="font-size: 18px; margin-bottom: 20px;">Click the link below to verify your email:</p>
+        <a href="${verificationLink}" style="display: inline-block; padding: 10px 20px; font-size: 18px; color: #fff; background-color: #007BFF; text-decoration: none; border-radius: 5px; margin-bottom: 20px;">Verify Email</a>
+        <p style="font-size: 14px; color: #666;">The link is valid for 15 minutes.</p>
+      </div>
+    `,
     attachments: [{
       filename: 'logo.png',
       path: path.join(__dirname, 'comfort-living/src/assets/logo.png'),
-      cid: 'unique@logo.png' // same cid value as in the html img src
+      cid: 'unique@logo.png' 
     }]
   };
+
+  app.post('/resend-verification', (req, res) => {
+    const { email } = req.body;
+  
+    const checkEmailQuery = 'SELECT * FROM users WHERE email = ?';
+    db.query(checkEmailQuery, [email], async (err, results) => {
+      if (err) {
+        console.error('Error checking email:', err);
+        return res.status(500).send('Error checking email');
+      }
+  
+      if (results.length === 0) {
+        console.log('Email not found');
+        return res.status(404).send('Email not found');
+      }
+  
+      const user = results[0];
+  
+      if (user.is_verified) {
+        console.log('Email is already verified');
+        return res.status(400).send('Email is already verified');
+      }
+  
+      try {
+        const verificationToken = jwt.sign({ email }, 'verification-secret', { expiresIn: '15m' });
+        const updateQuery = 'UPDATE users SET verification_token = ? WHERE email = ?';
+  
+        db.query(updateQuery, [verificationToken, email], (err, result) => {
+          if (err) {
+            console.error('Error updating verification token:', err);
+            res.status(500).send('Error sending verification email');
+          } else {
+            sendVerificationEmail(email, verificationToken);
+            res.status(200).send('Verification email sent');
+          }
+        });
+      } catch (err) {
+        console.error('Error generating verification token:', err);
+        res.status(500).send('Error sending verification email');
+      }
+    });
+  });
+
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
@@ -158,7 +202,6 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
     jaarinkomen,
     voorkeur,
     straal,
-    rol,
     email,
     password
   } = req.body;
@@ -170,7 +213,6 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
   const pdf = req.files['pdf'][0].buffer;
   const bewijsfoto = req.files['bewijsfoto'][0].buffer;
 
-  // Check if email already exists
   const checkEmailQuery = 'SELECT * FROM users WHERE email = ?';
   db.query(checkEmailQuery, [email], async (err, results) => {
     if (err) {
@@ -185,10 +227,10 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
     try {
       const hashedPassword = await argon2.hash(password);
       const verificationToken = jwt.sign({ email }, 'verification-secret', { expiresIn: '15m' });
-      const query = `INSERT INTO users (voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, rol, email, password, verification_token, is_verified) 
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      const query = `INSERT INTO users (voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, password, verification_token, is_verified) 
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
-      db.query(query, [voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, rol, email, hashedPassword, verificationToken, false], (err, result) => {
+      db.query(query, [voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, hashedPassword, verificationToken, false], (err, result) => {
         if (err) {
           console.error('Error inserting user:', err);
           res.status(500).send('Error registering user');
@@ -229,6 +271,18 @@ app.get('/verify-email', (req, res) => {
       res.status(400).send('Invalid or expired token');
     }
   }
+});
+
+app.get('/users', (req, res) => {
+  const sql = 'SELECT * FROM users';
+  db.query(sql, (err, results) => {
+      if (err) {
+          console.error('Error fetching data:', err);
+          res.status(500).send('Server error');
+          return;
+      }
+      res.json(results);
+  });
 });
 
 app.listen(port, () => {
