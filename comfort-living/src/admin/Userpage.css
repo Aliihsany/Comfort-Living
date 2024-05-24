@@ -1,7 +1,8 @@
-.sidebar{
-position: absolute;
-}
-.users-page {
+.sidebar {
+    position: absolute;
+  }
+  
+  .users-page {
     padding: 20px;
     width: 50%;
     z-index: 999;
@@ -27,7 +28,7 @@ position: absolute;
   
   .users-page table th, .users-page table td {
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #9e9494;
   }
   
   .users-page table th {
@@ -50,5 +51,22 @@ position: absolute;
   
   .users-page table button:hover {
     background-color: #cc0022;
+  }
+  
+  .users-page table .blocked-row {
+    background-color: #f8d7da; 
+  }
+  
+  .users-page table .blocked-row td {
+    color: #721c24; 
+  }
+  
+  .users-page table button.blocked {
+    background-color: #d6d8d9;
+    cursor: not-allowed;
+  }
+  
+  .users-page table button.blocked:hover {
+    background-color: #d6d8d9;
   }
   
