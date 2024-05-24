@@ -321,6 +321,18 @@ app.get('/panden', (req, res) => {
   });
 });
 
+app.get('/panden', (req, res) => {
+  const sql = 'SELECT * FROM panden';
+  db.query(sql, (err, results) => {
+      if (err) {
+          console.error('Error fetching data:', err);
+          res.status(500).send('Server error');
+          return;
+      }
+      res.json(results);
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

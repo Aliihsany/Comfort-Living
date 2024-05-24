@@ -1,0 +1,83 @@
+.woningtoevoegen {
+    padding: 20px;
+    max-width: 100%;
+    margin: auto;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    position: fixed;
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+}
+
+  
+  .woningtoevoegen h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    text-align: center;
+    color: #333;
+  }
+  
+  .woningtoevoegen form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .woningtoevoegen label {
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: #555;
+  }
+  
+  .woningtoevoegen input,
+  .woningtoevoegen textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+  
+  .woningtoevoegen input[type="file"] {
+    padding: 5px;
+  }
+  
+  .woningtoevoegen button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    cursor: pointer;
+    border: none;
+    background-color: #28a745;
+    color: white;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .woningtoevoegen button:hover {
+    background-color: #218838;
+  }
+  
+  .image-preview {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  
+  .image-preview img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin: 5px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .sidebar{
+    position: absolute;
+    }
+  
