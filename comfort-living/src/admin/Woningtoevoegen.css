@@ -7,11 +7,10 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 999;
     position: fixed;
-    top: 50%; 
-    left: 50%; 
-    transform: translate(-50%, -50%); 
-}
-
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
   
   .woningtoevoegen h1 {
     margin-bottom: 20px;
@@ -70,14 +69,15 @@
   }
   
   .image-preview img {
-    width: 100px;
-    height: 100px;
+    width: 5px;
+    height: 5px;
     object-fit: cover;
     margin: 5px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
-  .sidebar{
+  
+  .sidebar {
     position: absolute;
-    }
+  }
   
