@@ -6,6 +6,9 @@ import Housefilter from './Housefilter';
 import axios from 'axios';
 import './Homepage.css';
 import Slider from "react-slick";
+import Searchbar from './Searchbar';
+import Footer from './Footer';
+import Header from './Header';
 
 function Homepage() {
   const [filter, setFilter] = useState({
@@ -70,22 +73,11 @@ function Homepage() {
 
   return (
     <div className="App">
-      <header>
-        <div className="logo">
-          <img src="../assets/logo.jpg" alt="News" />
-        </div>
-        <nav>
-          <a href="#">Ik huur</a>
-          <a href="#">Ik zoek</a>
-          <a href="#">Organisatie</a>
-          <a href="#">Contact</a>
-          <input type="text" placeholder="Search" />
-          <a href="/login">Inloggen</a>
-        </nav>
-      </header>
+      <Header />
 
       <Banner />
       <Easyaccess />
+      <Searchbar />
 
       <div className="carousel-root">
         <Slider {...settings} className="carousel">
@@ -117,17 +109,7 @@ function Homepage() {
 
       <News />
 
-      <footer>
-        <div className="customer-service">
-          <a href="#">Contact</a>
-          <a href="#">Veelgestelde vragen</a>
-        </div>
-        <div className="social-media">
-          <a href="#">Facebook</a>
-          <a href="#">Instagram</a>
-          <a href="#">Twitter</a>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
