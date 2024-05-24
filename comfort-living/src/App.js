@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
+import Login from './components/Login';
+import VerifyEmail from './components/VerifyEmail';
 import Homepage from './components/Homepage';
-import Register from './components/register';
+import RegisterPage from './components/register';
 
 function App() {
   return (
-    <div className="App">
-     <Register />
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+        <Route path="/" element={<Homepage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
