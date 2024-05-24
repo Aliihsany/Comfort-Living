@@ -64,7 +64,7 @@ const Register = () => {
     };
 
     const validatePasswordStrength = (password) => {
-        const minLength = 10;
+        const minLength = 8;
         const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/;
         const hasUppercase = /[A-Z]/;
         const hasNumber = /[0-9]/;
@@ -80,13 +80,13 @@ const Register = () => {
     };
 
     const validatePassword = (password) => {
-        const minLength = 10;
+        const minLength = 8;
         const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/;
         const hasUppercase = /[A-Z]/;
         const hasNumber = /[0-9]/;
 
         if (password.length < minLength) {
-            return 'Wachtwoord moet minimaal 10 tekens lang zijn.';
+            return 'Wachtwoord moet minimaal 8 tekens lang zijn.';
         } else if (!hasSpecialChar.test(password)) {
             return 'Wachtwoord moet minimaal 1 speciaal teken bevatten.';
         } else if (!hasUppercase.test(password)) {
@@ -245,7 +245,7 @@ const Register = () => {
                     <div className="password-tooltip">
                         <p>Wachtwoord moet:</p>
                         <ul>
-                            <li>Minimaal 10 tekens lang zijn</li>
+                            <li>Minimaal 8 tekens lang zijn</li>
                             <li>Minimaal 1 speciaal teken bevatten</li>
                             <li>Minimaal 1 hoofdletter bevatten</li>
                             <li>Minimaal 1 cijfer bevatten</li>
@@ -278,7 +278,7 @@ const Register = () => {
                         </div>
                     </div>
                     <div className="flex-item">
-                        <label>Straal</label>
+                        <label>Straal km²</label>
                         <div className="input-icon">
                             <FontAwesomeIcon icon={faRuler} />
                             <input type="text" name="straal" placeholder="Straal" onChange={handleChange} required />
