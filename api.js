@@ -140,6 +140,47 @@ const sendVerificationEmail = (email, token) => {
     }]
   };
 
+  app.post('/resend-verification', (req, res) => {
+    const { email } = req.body;
+  
+    const checkEmailQuery = 'SELECT * FROM users WHERE email = ?';
+    db.query(checkEmailQuery, [email], async (err, results) => {
+      if (err) {
+        console.error('Error checking email:', err);
+        return res.status(500).send('Error checking email');
+      }
+  
+      if (results.length === 0) {
+        console.log('Email not found');
+        return res.status(404).send('Email not found');
+      }
+  
+      const user = results[0];
+  
+      if (user.is_verified) {
+        console.log('Email is already verified');
+        return res.status(400).send('Email is already verified');
+      }
+  
+      try {
+        const verificationToken = jwt.sign({ email }, 'verification-secret', { expiresIn: '15m' });
+        const updateQuery = 'UPDATE users SET verification_token = ? WHERE email = ?';
+  
+        db.query(updateQuery, [verificationToken, email], (err, result) => {
+          if (err) {
+            console.error('Error updating verification token:', err);
+            res.status(500).send('Error sending verification email');
+          } else {
+            sendVerificationEmail(email, verificationToken);
+            res.status(200).send('Verification email sent');
+          }
+        });
+      } catch (err) {
+        console.error('Error generating verification token:', err);
+        res.status(500).send('Error sending verification email');
+      }
+    });
+  });
 
 
   transporter.sendMail(mailOptions, (error, info) => {
