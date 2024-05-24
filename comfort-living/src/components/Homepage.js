@@ -5,11 +5,19 @@ import News from './News';
 import Housefilter from './Housefilter';
 import axios from 'axios';
 import './Homepage.css';
-
+import Header from './Header';
+import Footer from './Footer';
 
 function Homepage() {
-
-  const [filter, setFilter] = useState({});
+  const [filter, setFilter] = useState({
+    aantal: '',
+    grootte: '',
+    min: '',
+    max: '',
+    energielabel: '',
+    locatie: '',
+    type: ''
+  });
   const [panden, setPanden] = useState([]);
 
   const handleFilterChange = (newFilter) => {
@@ -32,28 +40,19 @@ function Homepage() {
 
   const filteredPanden = panden.filter(pand => {
     return (
-      (filter.aantal ? pand.aantal === filter.aantal : true) &&
-      (filter.grootte ? pand.grootte >= filter.grootte : true) &&
-      (filter.min ? pand.min >= filter.min : true) &&
-      (filter.max ? pand.max <= filter.max : true)
+      (filter.aantal ? pand.aantal === parseInt(filter.aantal) : true) &&
+      (filter.grootte ? pand.grootte >= parseInt(filter.grootte) : true) &&
+      (filter.min ? pand.min >= parseInt(filter.min) : true) &&
+      (filter.max ? pand.max <= parseInt(filter.max) : true) &&
+      (filter.energielabel ? pand.energielabel === filter.energielabel : true) &&
+      (filter.locatie ? pand.locatie.toLowerCase().includes(filter.locatie.toLowerCase()) : true) &&
+      (filter.type ? pand.type === filter.type : true)
     );
   });
 
   return (
     <div className="App">
-      <header>
-        <div className="logo">
-          <img src="../assets/logo.jpg" alt="News" />
-        </div>
-        <nav>
-          <a href="#">Ik huur</a>
-          <a href="#">Ik zoek</a>
-          <a href="#">Organisatie</a>
-          <a href="#">Contact</a>
-          <input type="text" placeholder="Search" />
-          <a href="#">Inloggen</a>
-        </nav>
-      </header>
+      <Header />
 
       <Banner />
       <EasyAccess />
@@ -63,7 +62,6 @@ function Homepage() {
         <div className="house-list">
           {filteredPanden.map(pand => (
             <div key={pand.id} className="house-item">
-              {/* Render de gegevens van elk pand */}
               <img src={pand.image} alt={`House ${pand.id}`} />
               <p>Kamers: {pand.aantal}</p>
               <p>Grootte: {pand.grootte} m²</p>
@@ -79,20 +77,9 @@ function Homepage() {
 
       <News />
 
-      <footer>
-        <div className="customer-service">
-          <a href="#">Contact</a>
-          <a href="#">Veelgestelde vragen</a>
-        </div>
-        <div className="social-media">
-          <a href="#">Facebook</a>
-          <a href="#">Instagram</a>
-          <a href="#">Twitter</a>
-        </div>
-      </footer>
+     <Footer />
     </div>
   );
 }
 
-
-export default Homepage
+export default Homepage;

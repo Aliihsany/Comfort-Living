@@ -29,6 +29,7 @@
     margin: 0;
     font-weight: bold;
     color: #333;
+    text-decoration: none;
   }
 
   .easy-access-item:hover {
