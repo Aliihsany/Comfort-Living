@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';
 
 const Header = () => {
   const [dropdown, setDropdown] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
+  const navigate = useNavigate();
 
   const handleMouseEnter = (menu) => {
     setDropdown(menu);
@@ -11,6 +13,12 @@ const Header = () => {
 
   const handleMouseLeave = () => {
     setDropdown(null);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    navigate('/login');
   };
 
   return (
@@ -48,9 +56,13 @@ const Header = () => {
           <li><a href="#">Organisatie</a></li>
           <li><a href="#">Contact</a></li>
           <li>
-            <input type="text" placeholder="Search" />
+            
           </li>
-          <li><a href="/login">Inloggen</a></li>
+          {isLoggedIn ? (
+            <li><button onClick={handleLogout} >Uitloggen</button></li>
+          ) : (
+            <li><button href="/login">Inloggen</button></li>
+          )}
         </ul>
       </nav>
     </header>

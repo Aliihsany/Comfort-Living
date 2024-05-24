@@ -7,6 +7,7 @@ import axios from 'axios';
 import './Homepage.css';
 import Header from './Header';
 import Footer from './Footer';
+import Searchbar from './Searchbar';
 
 
 function Homepage() {
@@ -48,6 +49,7 @@ function Homepage() {
 
       <Banner />
       <EasyAccess />
+      <Searchbar />
 
       <div className="content">
         <Housefilter onFilterChange={handleFilterChange} />

@@ -1,0 +1,28 @@
+.searchbar-container {
+    background-color: #B7CFDC;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .searchbar-container h1 {
+    color: white;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .search-input-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .search-input-container input {
+    width: 50%;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  .search-input-container input::placeholder {
+    color: #999999;
+  }

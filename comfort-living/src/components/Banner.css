@@ -5,6 +5,7 @@
     background-position: center;  /* Centreert de afbeelding */
     height: 40vh;  /* Stelt de hoogte van de banner in, je kunt deze aanpassen naar wens */
     display: flex;
+    width: 100%;
     justify-content: center;
     align-items: center;
     color: white;  /* Verandert de tekstkleur, zodat deze zichtbaar is op de afbeelding */
