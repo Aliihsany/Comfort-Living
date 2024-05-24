@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Banner from './Banner';
-import EasyAccess from './Easyaccess';
+import Easyaccess from './Easyaccess';
 import News from './News';
 import Housefilter from './Housefilter';
 import axios from 'axios';
@@ -65,7 +65,7 @@ function Homepage() {
       </header>
 
       <Banner />
-      <EasyAccess />
+      <Easyaccess />
 
       <div className="content">
         <Housefilter onFilterChange={handleFilterChange} />

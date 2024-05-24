@@ -14,8 +14,9 @@ const Housefilter = ({ onFilterChange }) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFilter({ ...filter, [name]: value });
-        onFilterChange({ ...filter, [name]: value }); // Stuur de bijgewerkte filter naar de oudercomponent
+        const newFilter = { ...filter, [name]: value };
+        setFilter(newFilter);
+        onFilterChange(newFilter);
     };
 
     return (
