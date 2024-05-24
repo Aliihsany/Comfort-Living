@@ -5,16 +5,24 @@ import Login from './components/Login';
 import VerifyEmail from './components/VerifyEmail';
 import Homepage from './components/Homepage';
 import RegisterPage from './components/register';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   return (
     <Router>
       <div className="App">
         <Routes>
-        <Route path="/" element={<Homepage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route 
+            path="/" 
+            element={
+              <PrivateRoute>
+                <Homepage />
+              </PrivateRoute>
+            } 
+          />
         </Routes>
       </div>
     </Router>
