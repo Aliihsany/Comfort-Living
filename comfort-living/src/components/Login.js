@@ -36,7 +36,7 @@ const Login = () => {
   const handleClick = () => {
     setTimeout(() => {
       window.location.href = '/';
-    }, 3000);
+    }, 1000);
     
   };
 

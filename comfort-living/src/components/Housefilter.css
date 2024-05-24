@@ -1,6 +1,6 @@
 .house-filter {
     display: flex;
-    flex-direction: column; /* Filters verticaal weergeven */
+    flex-direction: column; 
     margin: 20px;
   }
   
@@ -24,7 +24,7 @@
     color: white;
     border: none;
     cursor: pointer;
-    margin-top: 10px; /* Ruimte toevoegen onder de filters */
+    margin-top: 10px; 
   }
   
   button:hover {

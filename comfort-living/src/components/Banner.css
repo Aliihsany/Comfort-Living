@@ -4,6 +4,10 @@
     background-size: cover;  /* Zorgt ervoor dat de afbeelding de hele container bedekt */
     background-position: center;  /* Centreert de afbeelding */
     height: 40vh;  /* Stelt de hoogte van de banner in, je kunt deze aanpassen naar wens */
+    background-image: url('../assets/huisje.png');  
+    background-size: cover;  
+    background-position: center;  
+    height: 40vh;  
     display: flex;
     width: 100%;
     justify-content: center;
@@ -13,5 +17,10 @@
 }
 
 h1 {
+    color: white;  
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); 
+  }
+  
+  h1 {
     font-size: 3em;
 }

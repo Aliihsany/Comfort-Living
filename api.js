@@ -97,11 +97,6 @@ app.post('/login', (req, res) => {
 
     const user = results[0];
 
-    if (user.blocked) {
-      res.status(403).send('User is blocked');
-      return;
-    }
-
     try {
       if (await argon2.verify(user.password, password)) {
         const token = jwt.sign({ id: user.id }, 'Comfort-Living', { expiresIn: '1h' });
@@ -113,27 +108,6 @@ app.post('/login', (req, res) => {
       console.error('Error verifying password:', err);
       res.status(500).send('Error logging in');
     }
-  });
-});
-
-app.post('/block-user', (req, res) => {
-  console.log('Received request to block user');
-  const { id } = req.body;
-
-  console.log(`Blocking user with ID: ${id}`);
-
-  const sql = 'UPDATE users SET blocked = 1 WHERE id = ?';
-  db.query(sql, [id], (err, result) => {
-    if (err) {
-      console.error('Error blocking user:', err);
-      return res.status(500).send('Error blocking user');
-    }
-    if (result.affectedRows === 0) {
-      console.log('User not found');
-      return res.status(404).send('User not found');
-    }
-    console.log('User blocked successfully');
-    res.status(200).send('User blocked successfully');
   });
 });
 
@@ -277,8 +251,8 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
     try {
       const hashedPassword = await argon2.hash(password);
       const verificationToken = jwt.sign({ email }, 'verification-secret', { expiresIn: '15m' });
-      const query = `INSERT INTO users (voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, password, verification_token, is_verified, blocked) 
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)`;
+      const query = `INSERT INTO users (voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, password, verification_token, is_verified) 
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
       db.query(query, [voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, hashedPassword, verificationToken, false], (err, result) => {
         if (err) {
@@ -347,18 +321,25 @@ app.get('/panden', (req, res) => {
   });
 });
 
-app.get('/panden', (req, res) => {
-  const sql = 'SELECT * FROM panden';
-  db.query(sql, (err, results) => {
-      if (err) {
-          console.error('Error fetching data:', err);
-          res.status(500).send('Server error');
-          return;
-      }
-      res.json(results);
+app.get('/users/:id', verifyToken, (req, res) => {
+  const userId = req.user.id;
+  const sql = 'SELECT * FROM users WHERE id = ?';
+
+  db.query(sql, [userId], (err, result) => {
+    if (err) {
+      console.error('Error fetching user:', err);
+      res.status(500).send('Server error');
+      return;
+    }
+
+    if (result.length === 0) {
+      res.status(404).send('User not found');
+      return;
+    }
+
+    res.json(result[0]);
   });
 });
-
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

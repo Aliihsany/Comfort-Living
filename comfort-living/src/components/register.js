@@ -152,6 +152,13 @@ const Register = () => {
         setShowPasswordTooltip(false);
     };
 
+    const handleClick = () => {
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 1000);
+        
+      };
+
     return (
         <>
 
@@ -230,7 +237,7 @@ const Register = () => {
                         {passwordStrength > 0 && (
                             <div className="progress password-strength-bar">
                                 <div 
-                                    className={`progress-bar ${passwordStrength >= 75 ? 'bg-success' : passwordStrength >= 50 ? 'bg-warning' : 'bg-danger'}`} 
+                                    className={`progress-bar ${passwordStrength >= 95 ? 'bg-success' : passwordStrength >= 50 ? 'bg-warning' : 'bg-danger'}`} 
                                     role="progressbar" 
                                     style={{ width: `${passwordStrength}%` }} 
                                     aria-valuenow={passwordStrength} 
@@ -315,7 +322,7 @@ const Register = () => {
                     <label htmlFor="terms"> Ik ga akkoord met de <a href="#" onClick={toggleTermsModal}>algemene voorwaarden</a></label>
                 </div>
                 <br></br>
-                <button type="submit">Register</button>
+                <button onClick={handleClick} type="submit">Register</button>
             </form>
 
             {showTerms && (

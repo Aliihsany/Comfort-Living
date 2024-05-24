@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import log from 'loglevel';
 
-// Configure loglevel
 if (process.env.NODE_ENV === 'production') {
   log.setLevel('warn');
 } else {
@@ -59,7 +58,7 @@ const VerifyEmail = () => {
           Resend Verification Email
         </button>
         <br></br><br></br>
-        <a href='/'>Email is geverifieerd, ga naar Home</a>
+        <a href='/'>Email is geverifieerd? ga naar Home</a>
       </form>
     </div>
   );
