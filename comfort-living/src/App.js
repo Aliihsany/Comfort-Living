@@ -5,7 +5,6 @@ import Login from './components/Login';
 import VerifyEmail from './components/VerifyEmail';
 import Homepage from './components/Homepage';
 import RegisterPage from './components/register';
-import OveronsPage from './components/Overons';
 
 function App() {
   return (
@@ -16,7 +15,6 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/over" element={<OveronsPage />} />
         </Routes>
       </div>
     </Router>

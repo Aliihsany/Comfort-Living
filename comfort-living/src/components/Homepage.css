@@ -31,23 +31,30 @@
     height: 100px;
   }
   
+  .content {
+    display: flex;
+  }
+  
+  .house-filter {
+    width: 200px; /* Breedte van de filter sectie aanpassen */
+  }
+  
   .house-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-gap: 20px;
+    flex: 1; /* Foto's nemen de rest van de beschikbare ruimte in beslag */
+    display: flex;
+    flex-wrap: wrap;
   }
   
   .house-item {
-    display: grid;
-    grid-template-rows: auto 1fr;
-    grid-gap: 10px;
-    text-align: center;
+    width: 200px;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
   }
   
   .house-item img {
-    max-width: 100%;
-  }
-  
-  .house-item p {
-    margin: 0;
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
   }
