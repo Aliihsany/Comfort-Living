@@ -1,0 +1,23 @@
+.woning-details-page {
+    padding: 20px;
+    width: 75%;
+    margin: auto;
+    z-index: 999;
+    position: relative;
+  }
+  
+  .woning-details-page h1 {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .woning-details-page p {
+    margin: 10px 0;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  .woning-details-page p strong {
+    font-weight: bold;
+  }
+  

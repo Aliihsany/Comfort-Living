@@ -321,6 +321,41 @@ app.get('/panden', (req, res) => {
   });
 });
 
+app.post('/panden', (req, res) => {
+  const { naam, kamerindeling, huurkosten, servicekosten, energielabel, locatie, type, beschrijving } = req.body;
+
+  const sql = 'INSERT INTO panden (naam, kamerindeling, huurkosten, servicekosten, energielabel, locatie, type, beschrijving) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+  const values = [naam, kamerindeling, huurkosten, servicekosten, energielabel, locatie, type, beschrijving];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error('Error inserting data:', err);
+      res.status(500).json({ message: 'Error adding residence' });
+      return;
+    }
+    res.status(200).json({ message: 'Residence added successfully' });
+  });
+});
+
+app.get('/panden/:id', (req, res) => {
+  const { id } = req.params;
+  const sql = 'SELECT * FROM panden WHERE id = ?';
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error('Error fetching data:', err);
+      res.status(500).send('Error fetching residence');
+      return;
+    }
+    if (result.length === 0) {
+      res.status(404).send('Residence not found');
+      return;
+    }
+    res.json(result[0]);
+  });
+});
+
+
+
 app.get('/users/:id', verifyToken, (req, res) => {
   const userId = req.user.id;
   const sql = 'SELECT * FROM users WHERE id = ?';

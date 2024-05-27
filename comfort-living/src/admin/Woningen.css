@@ -1,0 +1,33 @@
+.woningen-page {
+    padding: 20px;
+    width: 50%;
+    z-index: 999;
+    position: relative;
+    left: 350px;
+  }
+  
+  .woningen-page h1 {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .woningen-page table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .woningen-page table th, .woningen-page table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .woningen-page table th {
+    background-color: #f4f4f4;
+  }
+  
+  .woningen-page table td {
+    vertical-align: top;
+  }
+  

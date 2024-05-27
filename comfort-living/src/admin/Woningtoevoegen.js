@@ -3,34 +3,45 @@ import './Woningtoevoegen.css';
 import Sidebar from './Sidebar';
 
 const Woningtoevoegen = () => {
-  const [name, setName] = useState('');
-  const [location, setLocation] = useState('');
-  const [price, setPrice] = useState('');
-  const [serviceCosts, setServiceCosts] = useState('');
-  const [description, setDescription] = useState('');
+  const [naam, setNaam] = useState('');
+  const [kamerindeling, setKamerindeling] = useState('');
+  const [huurkosten, setHuurkosten] = useState('');
+  const [servicekosten, setServicekosten] = useState('');
+  const [energielabel, setEnergielabel] = useState('');
+  const [locatie, setLocatie] = useState('');
+  const [type, setType] = useState('');
+  const [beschrijving, setBeschrijving] = useState('');
   const [images, setImages] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newResidence = { name, location, price, serviceCosts, description, images };
+    const newResidence = { naam, kamerindeling, huurkosten, servicekosten, energielabel, locatie, type, beschrijving };
 
-    fetch('http://localhost:3001/residences', {
+    fetch('http://localhost:3001/panden', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(newResidence),
     })
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
     .then(data => {
       console.log('Success:', data);
       // Optionally clear the form
-      setName('');
-      setLocation('');
-      setPrice('');
-      setServiceCosts('');
-      setDescription('');
+      setNaam('');
+      setKamerindeling('');
+      setHuurkosten('');
+      setServicekosten('');
+      setEnergielabel('');
+      setLocatie('');
+      setType('');
+      setBeschrijving('');
       setImages([]);
       setCurrentImageIndex(0);
     })
@@ -64,29 +75,40 @@ const Woningtoevoegen = () => {
   return (
     <div className="sidebar">
         <Sidebar />
-
     <div className="woningtoevoegen">
       <h1>Voeg Woning toe</h1>
       <form onSubmit={handleSubmit}>
         <label>
           Naam:
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+          <input type="text" value={naam} onChange={(e) => setNaam(e.target.value)} required />
         </label>
         <label>
-          Locatie:
-          <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} required />
+          Kamerindeling:
+          <input type="text" value={kamerindeling} onChange={(e) => setKamerindeling(e.target.value)} required />
         </label>
         <label>
           Huurkosten:
-          <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} required />
+          <input type="number" value={huurkosten} onChange={(e) => setHuurkosten(e.target.value)} required />
         </label>
         <label>
           Servicekosten:
-          <input type="number" value={serviceCosts} onChange={(e) => setServiceCosts(e.target.value)} required />
+          <input type="number" value={servicekosten} onChange={(e) => setServicekosten(e.target.value)} required />
+        </label>
+        <label>
+          Energielabel:
+          <input type="text" value={energielabel} onChange={(e) => setEnergielabel(e.target.value)} required />
+        </label>
+        <label>
+          Locatie:
+          <input type="text" value={locatie} onChange={(e) => setLocatie(e.target.value)} required />
+        </label>
+        <label>
+          Type:
+          <input type="text" value={type} onChange={(e) => setType(e.target.value)} required />
         </label>
         <label>
           Beschrijving:
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
+          <textarea value={beschrijving} onChange={(e) => setBeschrijving(e.target.value)} required />
         </label>
         <label>
           Afbeeldingen:
