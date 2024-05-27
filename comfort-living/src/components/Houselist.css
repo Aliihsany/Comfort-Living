@@ -1,0 +1,38 @@
+.house-list-container {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .house-list h1 {
+    color: #333;
+  }
+  
+  .house-list ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .house-item {
+    background-color: #fff;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 200px;
+  }
+  
+  .house-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+  }
+  
+  .house-item p {
+    margin: 10px 0 0 0;
+    color: #555;
+  }
+  

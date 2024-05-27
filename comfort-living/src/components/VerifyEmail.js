@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import log from 'loglevel';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 if (process.env.NODE_ENV === 'production') {
   log.setLevel('warn');
@@ -20,16 +22,20 @@ const VerifyEmail = () => {
       if (response.status === 200) {
         setMessage('Verification email sent. Please check your inbox.');
         setError('');
+        toast.success('Verification email sent. Please check your inbox.');
       } else {
         setMessage('');
         setError('Failed to send verification email. Please try again later.');
+        toast.error('Failed to send verification email. Please try again later.');
       }
     } catch (error) {
       log.error('Error sending verification email:', error);
       if (error.response) {
         setError(`Error: ${error.response.data}`);
+        toast.error(`Error: ${error.response.data}`);
       } else {
         setError('Error sending verification email. Please check your email and try again.');
+        toast.error('Error sending verification email. Please check your email and try again.');
       }
       setMessage('');
     }
@@ -41,7 +47,7 @@ const VerifyEmail = () => {
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <form onSubmit={handleSubmit} style={{ width: '300px' }}>
         <h2>Resend Verification Email</h2>
-        <br></br><br></br>
+        <br /><br />
         {message && <p style={{ color: 'green' }}>{message}</p>}
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <div style={{ marginBottom: '15px' }}>
@@ -55,11 +61,12 @@ const VerifyEmail = () => {
           />
         </div>
         <button type="submit" style={{ width: '100%', padding: '10px', backgroundColor: '#007BFF', color: 'white', border: 'none' }}>
-          Resend Verification Email
+        Verzend opnieuw Verificatie Email
         </button>
-        <br></br><br></br>
+        <br /><br />
         <a href='/'>Email is geverifieerd? ga naar Home</a>
       </form>
+      <ToastContainer />
     </div>
   );
 };

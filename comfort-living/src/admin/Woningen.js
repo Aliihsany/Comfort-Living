@@ -29,6 +29,7 @@ const Woningen = () => {
           <thead>
             <tr>
               <th>Naam</th>
+              <th>Afbeelding</th>
               <th>Kamerindeling</th>
               <th>Huurkosten</th>
               <th>Servicekosten</th>
@@ -43,6 +44,7 @@ const Woningen = () => {
                 <td>
                   <Link to={`/woningdetail/${residence.id}`}>{residence.naam}</Link>
                 </td>
+                <td><img src={residence.afbeelding_1} alt="Afbeelding 1" /></td>
                 <td>{residence.kamerindeling}</td>
                 <td>{residence.huurkosten}</td>
                 <td>{residence.servicekosten}</td>

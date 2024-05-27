@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Banner from './Banner';
 import Easyaccess from './Easyaccess';
-import News from './News';
 import Housefilter from './Housefilter';
 import axios from 'axios';
 import './Homepage.css';
@@ -10,6 +9,7 @@ import Searchbar from './Searchbar';
 import Footer from './Footer';
 import Header from './Header';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function Homepage() {
   const [filter, setFilter] = useState({
@@ -23,6 +23,7 @@ function Homepage() {
     type: ''
   });
   const [panden, setPanden] = useState([]);
+  const navigate = useNavigate();
 
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
@@ -43,7 +44,7 @@ function Homepage() {
   }, []);
 
   const images = [
-    "https://via.placeholder.com/600x400/ff0000/ffffff?text=Image+1",
+    "../public/src/assets/duikboot.png",
     "https://via.placeholder.com/600x400/00ff00/ffffff?text=Image+2",
     "https://via.placeholder.com/600x400/0000ff/ffffff?text=Image+3",
     "https://via.placeholder.com/600x400/ffff00/000000?text=Image+4",
@@ -60,26 +61,29 @@ function Homepage() {
     autoplaySpeed: 2000
   };
 
+  
   const filteredPanden = panden.filter(pand => {
     return (
-      (filter.aantal ? pand.aantal === parseInt(filter.aantal) : true) &&
+      (filter.aantal ? pand.kamerindeling === parseInt(filter.aantal) : true) &&
       (filter.grootte ? pand.grootte >= parseInt(filter.grootte) : true) &&
-      (filter.min ? pand.min >= parseInt(filter.min) : true) &&
-      (filter.max ? pand.max <= parseInt(filter.max) : true) &&
+      (filter.min ? pand.huurkosten >= parseInt(filter.min) : true) &&
+      (filter.max ? pand.huurkosten <= parseInt(filter.max) : true) &&
       (filter.energielabel ? pand.energielabel === filter.energielabel : true) &&
       (filter.locatie ? pand.locatie.toLowerCase().includes(filter.locatie.toLowerCase()) : true) &&
       (filter.type ? pand.type === filter.type : true)
     );
   });
 
+  const handleHouseClick = (id) => {
+    navigate(`/woning/${id}`);
+  };
+
   return (
     <div className="App">
       <Header />
-
       <Banner />
       <Easyaccess />
       <Searchbar />
-
       <div className="carousel-root">
         <Slider {...settings} className="carousel">
           {images.map((image, index) => (
@@ -89,27 +93,25 @@ function Homepage() {
           ))}
         </Slider>
       </div>
-
       <div className="content">
         <Housefilter onFilterChange={handleFilterChange} />
         <div className="house-list">
           {filteredPanden.map(pand => (
-            <Link to={`/woning/${pand.id}`} key={pand.id} className="house-item">
-              <img src={pand.afbeelding_1} alt={`House ${pand.naam}`} />
-              <p>Kamerindeling: {pand.kamerindeling}</p>
+            
+            <div key={pand.id} className="house-item" onClick={() => handleHouseClick(pand.id)}>
+              <p>Naam: {pand.naam}</p>
+              <img src={pand.afbeelding_1} alt={`House ${pand.id}`} />
+              <p>Kamers: {pand.kamerindeling}</p>
               <p>Huurkosten: €{pand.huurkosten}</p>
               <p>Servicekosten: €{pand.servicekosten}</p>
-              <p>Straal: {pand.straal}</p>
               <p>Energielabel: {pand.energielabel}</p>
               <p>Locatie: {pand.locatie}</p>
               <p>Type: {pand.type}</p>
-            </Link>
+              <p>Beschrijving: {pand.beschrijving}</p>
+            </div>
           ))}
         </div>
       </div>
-
-      <News />
-
       <Footer />
     </div>
   );

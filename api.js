@@ -1,5 +1,4 @@
 require('dotenv').config();
-
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -46,7 +45,7 @@ const sqlCommands = [
 db.connect((err) => {
   if (err) {
     console.error('Error connecting to database:', err);
-    return;
+    process.exit(1); // Exit the process if unable to connect to the database
   }
   console.log('Connected to database');
   sqlCommands.forEach((sql) => {
@@ -66,15 +65,16 @@ const verifyToken = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, 'Comfort-Living');
+    const decoded = jwt.verify(token.split(' ')[1], 'Comfort-Living');
     req.user = decoded;
 
-    const sql = 'SELECT is_verified FROM users WHERE id = ?';
+    const sql = 'SELECT is_verified, blocked FROM users WHERE id = ?';
     db.query(sql, [decoded.id], (err, results) => {
       if (err) {
         return res.status(500).send('Error checking verification status');
       }
-      if (results.length > 0 && results[0].is_verified) {
+      if (results.length > 0) {
+        req.user.isBlocked = results[0].blocked;
         return next();
       } else {
         return res.status(403).send('Email not verified');
@@ -84,6 +84,20 @@ const verifyToken = (req, res, next) => {
     return res.status(401).send('Invalid Token');
   }
 };
+
+app.get('/check-verification', verifyToken, (req, res) => {
+  const sql = 'SELECT is_verified, blocked FROM users WHERE id = ?';
+  db.query(sql, [req.user.id], (err, results) => {
+    if (err) {
+      return res.status(500).send('Error checking verification status');
+    }
+    if (results.length > 0) {
+      res.status(200).json({ isVerified: results[0].is_verified, isBlocked: results[0].blocked });
+    } else {
+      res.status(404).send('User not found');
+    }
+  });
+});
 
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
@@ -118,23 +132,22 @@ app.post('/login', (req, res) => {
 });
 
 app.get('/check-verification', verifyToken, (req, res) => {
-  const sql = 'SELECT is_verified FROM users WHERE id = ?';
+  const sql = 'SELECT is_verified, blocked FROM users WHERE id = ?';
   db.query(sql, [req.user.id], (err, results) => {
     if (err) {
       return res.status(500).send('Error checking verification status');
     }
     if (results.length > 0) {
-      res.status(200).json({ isVerified: results[0].is_verified });
+      res.status(200).json({ isVerified: results[0].is_verified, isBlocked: results[0].blocked });
     } else {
       res.status(404).send('User not found');
     }
   });
 });
 
+
 app.get('/protected', verifyToken, (req, res) => {
   res.status(200).send('This is a protected route');
-  console.log(req.verifyToken);
-  console.log(verifyToken);
 });
 
 const validateEmail = (email) => {
@@ -243,7 +256,7 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
   const pdf = req.files['pdf'][0].buffer;
   const bewijsfoto = req.files['bewijsfoto'][0].buffer;
 
-  const checkEmailQuery = 'SELECT * FROM users WHERE email = ?';
+  const checkEmailQuery = 'SELECT * FROM gegevens, users WHERE users.email = ?';
   db.query(checkEmailQuery, [email], async (err, results) => {
     if (err) {
       console.error('Error checking email:', err);
@@ -257,16 +270,25 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
     try {
       const hashedPassword = await argon2.hash(password);
       const verificationToken = jwt.sign({ email }, 'verification-secret', { expiresIn: '15m' });
-      const query = `INSERT INTO users (voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, password, verification_token, is_verified) 
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-
-      db.query(query, [voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, hashedPassword, verificationToken, false], (err, result) => {
+      const query = `INSERT INTO users (voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, password, verification_token, is_verified, rol) 
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      db.query(query, [voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, hashedPassword, verificationToken, false, 'default_role'], (err, result) => {
         if (err) {
           console.error('Error inserting user:', err);
           res.status(500).send('Error registering user');
         } else {
-          sendVerificationEmail(email, verificationToken);
-          res.status(200).send('User registered successfully. Please verify your email.');
+          // Insert into gegevens table
+          const gegevensQuery = `INSERT INTO gegevens (voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, password, verification_token, is_verified, rol) 
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+          db.query(gegevensQuery, [voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, hashedPassword, verificationToken, false, 'default_role'], (err, result) => {
+            if (err) {
+              console.error('Error inserting gegevens:', err);
+              res.status(500).send('Error registering user');
+            } else {
+              sendVerificationEmail(email, verificationToken);
+              res.status(200).send('User registered successfully. Please verify your email.');
+            }
+          });
         }
       });
     } catch (err) {
@@ -275,6 +297,7 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
     }
   });
 });
+
 
 app.get('/verify-email', (req, res) => {
   const { token } = req.query;
@@ -360,10 +383,52 @@ app.get('/panden/:id', (req, res) => {
   });
 });
 
+app.put('/block-user', (req, res) => {
+  const { id } = req.body;
 
-app.get('/users/:id', verifyToken, (req, res) => {
+  if (!id) {
+    return res.status(400).send('User ID is required');
+  }
+
+  const query = 'UPDATE users SET blocked = 1 WHERE id = ?';
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error('Error blocking user:', err);
+      return res.status(500).send('Error blocking user');
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).send('User not found');
+    }
+
+    res.status(200).send('User blocked successfully');
+  });
+});
+
+
+app.get('/panden', (req, res) => {
+  const { naam } = req.query;
+  let sql = 'SELECT * FROM panden';
+  const values = [];
+
+  if (naam) {
+    sql += ' WHERE naam LIKE ?';
+    values.push(`%${naam}%`);
+  }
+
+  db.query(sql, values, (err, results) => {
+    if (err) {
+      console.error('Error fetching residences:', err);
+      res.status(500).json({ message: 'Error fetching residences' });
+      return;
+    }
+    res.status(200).json(results);
+  });
+});
+
+app.get('/users/me', verifyToken, (req, res) => {
   const userId = req.user.id;
-  const sql = 'SELECT * FROM users WHERE id = ?';
+  const sql = 'SELECT voornaam, achternaam, geboortedatum, woonadres, telefoonnummer, jaarinkomen, voorkeur, straal, email FROM users WHERE id = ?';
 
   db.query(sql, [userId], (err, result) => {
     if (err) {
@@ -381,6 +446,26 @@ app.get('/users/:id', verifyToken, (req, res) => {
   });
 });
 
+app.put('/users/me', verifyToken, (req, res) => {
+  const userId = req.user.id;
+  const { voornaam, achternaam, geboortedatum, woonadres, telefoonnummer, jaarinkomen, voorkeur, straal, email } = req.body;
+
+  const sql = 'UPDATE users SET voornaam = ?, achternaam = ?, geboortedatum = ?, woonadres = ?, telefoonnummer = ?, jaarinkomen = ?, voorkeur = ?, straal = ?, email = ? WHERE id = ?';
+  
+  db.query(sql, [voornaam, achternaam, geboortedatum, woonadres, telefoonnummer, jaarinkomen, voorkeur, straal, email, userId], (err, result) => {
+    if (err) {
+      console.error('Error updating user:', err);
+      res.status(500).send('Server error');
+      return;
+    }
+
+    res.status(200).send('Profile updated successfully');
+  });
+});
+
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
+
