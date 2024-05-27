@@ -19,6 +19,7 @@ const Register = () => {
         voorkeur: '',
         straal: '',
         email: '',
+        rol: false,
         password: '',
         pdf: null,
         bewijsfoto: null,
@@ -121,6 +122,9 @@ const Register = () => {
             }
         });
 
+        // Set rol value
+        data.append('rol', formData.rol ? 'true' : 'false');
+
         try {
             const response = await axios.post('http://localhost:3001/register', data, {
                 headers: {
@@ -151,13 +155,6 @@ const Register = () => {
     const handlePasswordBlur = () => {
         setShowPasswordTooltip(false);
     };
-
-    const handleClick = () => {
-        setTimeout(() => {
-          window.location.href = '/login';
-        }, 1000);
-        
-      };
 
     return (
         <>
@@ -322,7 +319,7 @@ const Register = () => {
                     <label htmlFor="terms"> Ik ga akkoord met de <a href="#" onClick={toggleTermsModal}>algemene voorwaarden</a></label>
                 </div>
                 <br></br>
-                <button onClick={handleClick} type="submit">Register</button>
+                <button type="submit">Register</button>
             </form>
 
             {showTerms && (
