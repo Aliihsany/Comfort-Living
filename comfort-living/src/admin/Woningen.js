@@ -41,7 +41,7 @@ const Woningen = () => {
             {residences.map((residence) => (
               <tr key={residence.id}>
                 <td>
-                  <Link to={`/woning/${residence.id}`}>{residence.naam}</Link>
+                  <Link to={`/woningdetail/${residence.id}`}>{residence.naam}</Link>
                 </td>
                 <td>{residence.kamerindeling}</td>
                 <td>{residence.huurkosten}</td>
