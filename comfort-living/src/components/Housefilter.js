@@ -25,23 +25,23 @@ const Housefilter = ({ onFilterChange }) => {
     <div className="house-filter">
       <div className="filter-section">
         <label>Aantal kamers:</label>
-        <input type="number" name="rooms" value={filter.rooms} onChange={handleChange} />
+        <input type="number" name="aantal" value={filter.aantal} onChange={handleChange} />
       </div>
       <div className="filter-section">
         <label>Grootte (m²):</label>
-        <input type="number" name="size" value={filter.size} onChange={handleChange} />
+        <input type="number" name="grootte" value={filter.grootte} onChange={handleChange} />
       </div>
       <div className="filter-section">
         <label>Min. Prijs:</label>
-        <input type="number" name="minPrice" value={filter.minPrice} onChange={handleChange} />
+        <input type="number" name="min" value={filter.min} onChange={handleChange} />
       </div>
       <div className="filter-section">
         <label>Max. Prijs:</label>
-        <input type="number" name="maxPrice" value={filter.maxPrice} onChange={handleChange} />
+        <input type="number" name="max" value={filter.max} onChange={handleChange} />
       </div>
       <div className="filter-section">
         <label>Energielabel:</label>
-        <select name="energyLabel" value={filter.energyLabel} onChange={handleChange}>
+        <select name="energielabel" value={filter.energielabel} onChange={handleChange}>
           <option value="">Selecteer energielabel</option>
           <option value="A">A</option>
           <option value="B">B</option>
@@ -54,7 +54,7 @@ const Housefilter = ({ onFilterChange }) => {
       </div>
       <div className="filter-section">
         <label>Locatie:</label>
-        <input type="text" name="location" value={filter.location} onChange={handleChange} />
+        <input type="text" name="locatie" value={filter.locatie} onChange={handleChange} />
       </div>
       <div className="filter-section">
         <label>Type woning:</label>

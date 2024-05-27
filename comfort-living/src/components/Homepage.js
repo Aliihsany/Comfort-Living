@@ -42,7 +42,7 @@ function Homepage() {
   }, []);
 
   const images = [
-    "https://via.placeholder.com/600x400/ff0000/ffffff?text=Image+1",
+    "../public/src/assets/duikboot.png",
     "https://via.placeholder.com/600x400/00ff00/ffffff?text=Image+2",
     "https://via.placeholder.com/600x400/0000ff/ffffff?text=Image+3",
     "https://via.placeholder.com/600x400/ffff00/000000?text=Image+4",
@@ -59,6 +59,7 @@ function Homepage() {
     autoplaySpeed: 2000
   };
 
+  
   const filteredPanden = panden.filter(pand => {
     return (
       (filter.aantal ? pand.aantal === parseInt(filter.aantal) : true) &&
@@ -70,6 +71,8 @@ function Homepage() {
       (filter.type ? pand.type === filter.type : true)
     );
   });
+
+  
 
   return (
     <div className="App">
