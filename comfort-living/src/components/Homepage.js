@@ -75,7 +75,7 @@ function Homepage() {
   });
 
   const handleHouseClick = (id) => {
-    navigate(`/house/${id}`);
+    navigate(`/woning/${id}`);
   };
 
   return (
@@ -97,8 +97,10 @@ function Homepage() {
         <Housefilter onFilterChange={handleFilterChange} />
         <div className="house-list">
           {filteredPanden.map(pand => (
+            
             <div key={pand.id} className="house-item" onClick={() => handleHouseClick(pand.id)}>
-              <img src={pand.afbeelding} alt={`House ${pand.id}`} />
+              <p>Naam: {pand.naam}</p>
+              <img src={pand.afbeelding_1} alt={`House ${pand.id}`} />
               <p>Kamers: {pand.kamerindeling}</p>
               <p>Huurkosten: €{pand.huurkosten}</p>
               <p>Servicekosten: €{pand.servicekosten}</p>
