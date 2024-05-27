@@ -246,7 +246,8 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
     voorkeur,
     straal,
     email,
-    password
+    password,
+    user_id
   } = req.body;
 
   if (!validateEmail(email)) {
@@ -278,9 +279,9 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
           res.status(500).send('Error registering user');
         } else {
           // Insert into gegevens table
-          const gegevensQuery = `INSERT INTO gegevens (voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, password, verification_token, is_verified, rol) 
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-          db.query(gegevensQuery, [voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, hashedPassword, verificationToken, false, 'default_role'], (err, result) => {
+          const gegevensQuery = `INSERT INTO gegevens (voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, password, verification_token, is_verified, rol, user_id) 
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, true)`;
+          db.query(gegevensQuery, [voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, hashedPassword, verificationToken, false, 'default_role', user_id], (err, result) => {
             if (err) {
               console.error('Error inserting gegevens:', err);
               res.status(500).send('Error registering user');
@@ -446,26 +447,25 @@ app.get('/users/me', verifyToken, (req, res) => {
   });
 });
 
-app.put('/users/me', verifyToken, (req, res) => {
-  const userId = req.user.id;
-  const { voornaam, achternaam, geboortedatum, woonadres, telefoonnummer, jaarinkomen, voorkeur, straal, email } = req.body;
+app.delete('/users/:id', (req, res) => {
+  const userId = req.params.id;
+  const query = 'DELETE FROM users WHERE id = ?';
 
-  const sql = 'UPDATE users SET voornaam = ?, achternaam = ?, geboortedatum = ?, woonadres = ?, telefoonnummer = ?, jaarinkomen = ?, voorkeur = ?, straal = ?, email = ? WHERE id = ?';
-  
-  db.query(sql, [voornaam, achternaam, geboortedatum, woonadres, telefoonnummer, jaarinkomen, voorkeur, straal, email, userId], (err, result) => {
+  db.query(query, [userId], (err, result) => {
     if (err) {
-      console.error('Error updating user:', err);
-      res.status(500).send('Server error');
-      return;
+      console.error('Error deleting user:', err);
+      return res.status(500).json({ error: 'Error deleting user' });
     }
 
-    res.status(200).send('Profile updated successfully');
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.status(200).json({ message: 'User deleted successfully' });
   });
 });
 
 
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server running on port ${port}`);
 });
-
-

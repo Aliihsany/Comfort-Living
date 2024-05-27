@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Userpage.css';
-import UserDetailsModal from './Userdetail';
+import UserDetailsModal from './Userdetail'; 
 import Sidebar from './Sidebar';
 
 const Userpage = () => {
@@ -24,7 +24,7 @@ const Userpage = () => {
 
   const handleBlockUser = async (id) => {
     try {
-      const response = await axios.put('http://localhost:3001/block-user', { id });
+      const response = await axios.post('http://localhost:3001/block-user', { id });
       console.log(response.data); // Log the response to check the success message
       fetchUsers(); // Refresh the list after blocking
     } catch (error) {
@@ -33,7 +33,6 @@ const Userpage = () => {
   };
 
   const handleDeleteUser = async (id) => {
-    // Vraag om bevestiging
     const confirmDelete = window.confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?');
 
     if (confirmDelete) {
@@ -69,7 +68,7 @@ const Userpage = () => {
               <th>Voornaam</th>
               <th>Achternaam</th>
               <th>Email</th>
-              <th>Geblokkeerd</th> {/* Nieuwe kolom voor geblokkeerde status */}
+              <th>Geblokkeerd</th>
               <th>Acties</th>
               <th>Verwijderen</th> 
             </tr>
@@ -81,14 +80,14 @@ const Userpage = () => {
                 <td>{user.voornaam}</td>
                 <td>{user.achternaam}</td>
                 <td>{user.email}</td>
-                <td>{user.blocked ? 'Ja' : 'Nee'}</td> {/* Geblokkeerde status weergeven */}
+                <td>{user.blocked ? 'Ja' : 'Nee'}</td>
                 <td>
                   <button onClick={() => handleBlockUser(user.id)} disabled={user.blocked}>
                     {user.blocked ? 'Geblokkeerd' : 'Blokkeer'}
                   </button>
                 </td>
                 <td>
-                  <button onClick={() => handleDeleteUser(user.deleted)}>
+                  <button onClick={() => handleDeleteUser(user.id)}>
                     Verwijderen
                   </button>
                 </td>
