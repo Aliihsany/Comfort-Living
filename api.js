@@ -65,15 +65,16 @@ const verifyToken = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, 'Comfort-Living');
+    const decoded = jwt.verify(token.split(' ')[1], 'Comfort-Living');
     req.user = decoded;
 
-    const sql = 'SELECT is_verified FROM users WHERE id = ?';
+    const sql = 'SELECT is_verified, blocked FROM users WHERE id = ?';
     db.query(sql, [decoded.id], (err, results) => {
       if (err) {
         return res.status(500).send('Error checking verification status');
       }
-      if (results.length > 0 && results[0].is_verified) {
+      if (results.length > 0) {
+        req.user.isBlocked = results[0].blocked;
         return next();
       } else {
         return res.status(403).send('Email not verified');
@@ -83,6 +84,20 @@ const verifyToken = (req, res, next) => {
     return res.status(401).send('Invalid Token');
   }
 };
+
+app.get('/check-verification', verifyToken, (req, res) => {
+  const sql = 'SELECT is_verified, blocked FROM users WHERE id = ?';
+  db.query(sql, [req.user.id], (err, results) => {
+    if (err) {
+      return res.status(500).send('Error checking verification status');
+    }
+    if (results.length > 0) {
+      res.status(200).json({ isVerified: results[0].is_verified, isBlocked: results[0].blocked });
+    } else {
+      res.status(404).send('User not found');
+    }
+  });
+});
 
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
@@ -380,9 +395,30 @@ app.put('/block-user', (req, res) => {
   });
 });
 
-app.get('/users/:id', verifyToken, (req, res) => {
+
+app.get('/panden', (req, res) => {
+  const { naam } = req.query;
+  let sql = 'SELECT * FROM panden';
+  const values = [];
+
+  if (naam) {
+    sql += ' WHERE naam LIKE ?';
+    values.push(`%${naam}%`);
+  }
+
+  db.query(sql, values, (err, results) => {
+    if (err) {
+      console.error('Error fetching residences:', err);
+      res.status(500).json({ message: 'Error fetching residences' });
+      return;
+    }
+    res.status(200).json(results);
+  });
+});
+
+app.get('/users/me', verifyToken, (req, res) => {
   const userId = req.user.id;
-  const sql = 'SELECT * FROM users WHERE id = ?';
+  const sql = 'SELECT voornaam, achternaam, geboortedatum, woonadres, telefoonnummer, jaarinkomen, voorkeur, straal, email FROM users WHERE id = ?';
 
   db.query(sql, [userId], (err, result) => {
     if (err) {
@@ -399,6 +435,24 @@ app.get('/users/:id', verifyToken, (req, res) => {
     res.json(result[0]);
   });
 });
+
+app.put('/users/me', verifyToken, (req, res) => {
+  const userId = req.user.id;
+  const { voornaam, achternaam, geboortedatum, woonadres, telefoonnummer, jaarinkomen, voorkeur, straal, email } = req.body;
+
+  const sql = 'UPDATE users SET voornaam = ?, achternaam = ?, geboortedatum = ?, woonadres = ?, telefoonnummer = ?, jaarinkomen = ?, voorkeur = ?, straal = ?, email = ? WHERE id = ?';
+  
+  db.query(sql, [voornaam, achternaam, geboortedatum, woonadres, telefoonnummer, jaarinkomen, voorkeur, straal, email, userId], (err, result) => {
+    if (err) {
+      console.error('Error updating user:', err);
+      res.status(500).send('Server error');
+      return;
+    }
+
+    res.status(200).send('Profile updated successfully');
+  });
+});
+
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

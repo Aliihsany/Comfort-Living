@@ -11,15 +11,17 @@ const PrivateRoute = ({ children }) => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
+        console.log('Decoded Token:', decodedToken);
         const currentTime = Date.now() / 1000;
 
         if (decodedToken.exp < currentTime) {
+          console.log('Token expired');
           localStorage.removeItem('token');
           setUserStatus({ isVerified: false, isBlocked: false });
         } else {
           axios.get('http://localhost:3001/check-verification', {
             headers: {
-              Authorization: token,
+              Authorization: `Bearer ${token}`,
             },
           })
           .then(response => {
@@ -28,7 +30,8 @@ const PrivateRoute = ({ children }) => {
               isBlocked: response.data.isBlocked,
             });
           })
-          .catch(() => {
+          .catch(error => {
+            console.error('Error during verification check:', error);
             setUserStatus({ isVerified: false, isBlocked: false });
           });
         }
