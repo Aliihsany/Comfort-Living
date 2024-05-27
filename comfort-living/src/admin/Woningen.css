@@ -11,6 +11,16 @@
     text-align: center;
   }
   
+.woningen-page img {
+  width: 100px;
+    height: auto;
+    border-radius: 5px;
+    align-items: center;
+    text-align: center;
+    position: relative;
+  }
+
+
   .woningen-page table {
     width: 100%;
     border-collapse: collapse;
