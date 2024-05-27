@@ -9,7 +9,8 @@ import PrivateRoute from './components/PrivateRoute';
 import AdminPage from './admin/Adminpage';
 import WoningToevoegen from './admin/Woningtoevoegen';
 import Woningen from './admin/Woningen';
-import WoningDetails from './admin/Woningdetail';
+import Woninginfo from './components/Woninginfo';
+import Woningdetail from './admin/Woningdetail'; 
 import Userpage from './admin/Userpage';
 import Blocked from './components/Blocked';
 import "slick-carousel/slick/slick.css";
@@ -32,10 +33,12 @@ function App() {
               </PrivateRoute>
             } 
           />
+          <Route path="/" element={<Homepage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/woningtoevoegen" element={<WoningToevoegen />} />
+          <Route path="/woning/:id" element={<Woninginfo />} /> 
+          <Route path="/woningdetail" element={<Woningdetail />} />
           <Route path="/woningen" element={<Woningen />} />
-          <Route path="/woning/:id" element={<WoningDetails />} /> {/* New route */}
           <Route path="/userpage" element={<Userpage />} />
         </Routes>
       </div>

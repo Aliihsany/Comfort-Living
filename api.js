@@ -13,11 +13,17 @@ const path = require('path');
 const port = 3001;
 
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+
+const upload = multer({
+  limits: {
+    fileSize: 15 * 1024 * 1024, // 15MB
+  },
+});
 
 app.use(cors());
 app.options('*', cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 const dbConfig = {
   host: process.env.DB_HOST,
@@ -320,10 +326,10 @@ app.get('/panden', (req, res) => {
 });
 
 app.post('/panden', (req, res) => {
-  const { naam, kamerindeling, huurkosten, servicekosten, energielabel, locatie, type, beschrijving } = req.body;
+  const { naam, kamerindeling, huurkosten, servicekosten, energielabel, locatie, type, straal, beschrijving, afbeelding_1, afbeelding_2, afbeelding_3 } = req.body;
 
-  const sql = 'INSERT INTO panden (naam, kamerindeling, huurkosten, servicekosten, energielabel, locatie, type, beschrijving) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-  const values = [naam, kamerindeling, huurkosten, servicekosten, energielabel, locatie, type, beschrijving];
+  const sql = 'INSERT INTO panden (naam, kamerindeling, huurkosten, servicekosten, energielabel, locatie, type, straal, beschrijving, afbeelding_1, afbeelding_2, afbeelding_3) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  const values = [naam, kamerindeling, huurkosten, servicekosten, energielabel, locatie, type, straal, beschrijving, afbeelding_1, afbeelding_2, afbeelding_3];
 
   db.query(sql, values, (err, result) => {
     if (err) {

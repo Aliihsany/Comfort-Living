@@ -9,6 +9,7 @@ import Slider from "react-slick";
 import Searchbar from './Searchbar';
 import Footer from './Footer';
 import Header from './Header';
+import { Link } from 'react-router-dom';
 
 function Homepage() {
   const [filter, setFilter] = useState({
@@ -93,16 +94,16 @@ function Homepage() {
         <Housefilter onFilterChange={handleFilterChange} />
         <div className="house-list">
           {filteredPanden.map(pand => (
-            <div key={pand.id} className="house-item">
-              <img src={pand.afbeelding} alt={`House ${pand.id}`} />
-              <p>Kamers: {pand.aantal}</p>
-              <p>Grootte: {pand.grootte} m²</p>
-              <p>Min. prijs: €{pand.min}</p>
-              <p>Max. prijs: €{pand.max}</p>
+            <Link to={`/woning/${pand.id}`} key={pand.id} className="house-item">
+              <img src={pand.afbeelding_1} alt={`House ${pand.naam}`} />
+              <p>Kamerindeling: {pand.kamerindeling}</p>
+              <p>Huurkosten: €{pand.huurkosten}</p>
+              <p>Servicekosten: €{pand.servicekosten}</p>
+              <p>Straal: {pand.straal}</p>
               <p>Energielabel: {pand.energielabel}</p>
               <p>Locatie: {pand.locatie}</p>
               <p>Type: {pand.type}</p>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
