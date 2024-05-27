@@ -1,32 +1,39 @@
 .house-filter {
-    display: flex;
-    flex-direction: column; 
-    margin: 20px;
-  }
-  
-  .filter-section {
-    margin-bottom: 10px;
-  }
-  
-  .filter-section label {
-    font-weight: bold;
-  }
-  
-  .filter-section input {
-    width: 100%;
-    padding: 5px;
-    margin-top: 5px;
-  }
-  
-  button {
-    padding: 8px 16px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    margin-top: 10px; 
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+}
+
+.filter-section {
+  margin-bottom: 15px; 
+}
+
+.filter-section label {
+  font-weight: bold;
+  font-size: 16px; 
+  margin-bottom: 5px;
+}
+
+.filter-section input,
+.filter-section select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ddd; 
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+button {
+  padding: 12px 24px; 
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: 15px;
+  border-radius: 4px; 
+}
+
+button:hover {
+  background-color: #0056b3;
+}
