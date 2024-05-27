@@ -43,13 +43,13 @@ const PrivateRoute = ({ children }) => {
     return <div>Loading...</div>;
   }
 
-  // if (!token) {
-  //   return <Navigate to="/login" />;
-  // }
+  if (!token) {
+    return <Navigate to="/login" />;
+  }
 
-  // if (!isVerified) {
-  //   return <Navigate to="/verify-email" />;
-  // }
+  if (!isVerified) {
+    return <Navigate to="/verify-email" />;
+  }
 
   return children;
 };
