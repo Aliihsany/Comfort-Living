@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Banner from './Banner';
 import Easyaccess from './Easyaccess';
-import News from './News';
 import Housefilter from './Housefilter';
 import axios from 'axios';
 import './Homepage.css';
@@ -9,6 +8,7 @@ import Slider from "react-slick";
 import Searchbar from './Searchbar';
 import Footer from './Footer';
 import Header from './Header';
+import { useNavigate } from 'react-router-dom';
 
 function Homepage() {
   const [filter, setFilter] = useState({
@@ -22,6 +22,7 @@ function Homepage() {
     type: ''
   });
   const [panden, setPanden] = useState([]);
+  const navigate = useNavigate();
 
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
@@ -61,24 +62,26 @@ function Homepage() {
 
   const filteredPanden = panden.filter(pand => {
     return (
-      (filter.aantal ? pand.aantal === parseInt(filter.aantal) : true) &&
+      (filter.aantal ? pand.kamerindeling === parseInt(filter.aantal) : true) &&
       (filter.grootte ? pand.grootte >= parseInt(filter.grootte) : true) &&
-      (filter.min ? pand.min >= parseInt(filter.min) : true) &&
-      (filter.max ? pand.max <= parseInt(filter.max) : true) &&
+      (filter.min ? pand.huurkosten >= parseInt(filter.min) : true) &&
+      (filter.max ? pand.huurkosten <= parseInt(filter.max) : true) &&
       (filter.energielabel ? pand.energielabel === filter.energielabel : true) &&
       (filter.locatie ? pand.locatie.toLowerCase().includes(filter.locatie.toLowerCase()) : true) &&
       (filter.type ? pand.type === filter.type : true)
     );
   });
 
+  const handleHouseClick = (id) => {
+    navigate(`/house/${id}`);
+  };
+
   return (
     <div className="App">
       <Header />
-
       <Banner />
       <Easyaccess />
       <Searchbar />
-
       <div className="carousel-root">
         <Slider {...settings} className="carousel">
           {images.map((image, index) => (
@@ -88,27 +91,23 @@ function Homepage() {
           ))}
         </Slider>
       </div>
-
       <div className="content">
         <Housefilter onFilterChange={handleFilterChange} />
         <div className="house-list">
           {filteredPanden.map(pand => (
-            <div key={pand.id} className="house-item">
+            <div key={pand.id} className="house-item" onClick={() => handleHouseClick(pand.id)}>
               <img src={pand.afbeelding} alt={`House ${pand.id}`} />
-              <p>Kamers: {pand.aantal}</p>
-              <p>Grootte: {pand.grootte} m²</p>
-              <p>Min. prijs: €{pand.min}</p>
-              <p>Max. prijs: €{pand.max}</p>
+              <p>Kamers: {pand.kamerindeling}</p>
+              <p>Huurkosten: €{pand.huurkosten}</p>
+              <p>Servicekosten: €{pand.servicekosten}</p>
               <p>Energielabel: {pand.energielabel}</p>
               <p>Locatie: {pand.locatie}</p>
               <p>Type: {pand.type}</p>
+              <p>Beschrijving: {pand.beschrijving}</p>
             </div>
           ))}
         </div>
       </div>
-
-      <News />
-
       <Footer />
     </div>
   );

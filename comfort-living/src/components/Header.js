@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';
+import logo from '../assets/logo.png'; // Import the logo image
 
 const Header = () => {
   const [dropdown, setDropdown] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [profileImage, setProfileImage] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      const imageUrl = localStorage.getItem('profileImage');
+      setProfileImage(imageUrl);
+    }
+  }, [isLoggedIn]);
 
   const handleMouseEnter = (menu) => {
     setDropdown(menu);
@@ -17,19 +27,30 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('profileImage');
     setIsLoggedIn(false);
     navigate('/login');
+  };
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
   };
 
   return (
     <header>
       <div className="logo">
-        <img src="../assets/logo.jpg" alt="Logo" />
+        <img src={logo} alt="Logo" />
       </div>
-      <nav>
+      <button className="menu-toggle" onClick={toggleMenu}>
+        ☰
+      </button>
+      <nav className={menuOpen ? 'open' : ''}>
         <ul>
           <li><Link to="/">Home</Link></li>
-          <li onMouseEnter={() => handleMouseEnter('ikhuur')} onMouseLeave={handleMouseLeave}>
+          <li
+            onMouseEnter={() => handleMouseEnter('ikhuur')}
+            onMouseLeave={handleMouseLeave}
+          >
             <a href="#">Ik huur</a>
             {dropdown === 'ikhuur' && (
               <ul className="dropdown">
@@ -40,7 +61,10 @@ const Header = () => {
               </ul>
             )}
           </li>
-          <li onMouseEnter={() => handleMouseEnter('ikzoek')} onMouseLeave={handleMouseLeave}>
+          <li
+            onMouseEnter={() => handleMouseEnter('ikzoek')}
+            onMouseLeave={handleMouseLeave}
+          >
             <a href="#">Ik zoek</a>
             {dropdown === 'ikzoek' && (
               <ul className="dropdown">
@@ -55,13 +79,21 @@ const Header = () => {
           </li>
           <li><a href="#">Organisatie</a></li>
           <li><a href="#">Contact</a></li>
-          <li>
-            
-          </li>
           {isLoggedIn ? (
-            <li><button onClick={handleLogout} >Uitloggen</button></li>
+            <>
+              <li>
+                <Link to="/profile">
+                  {profileImage ? (
+                    <img src={profileImage} alt="Profile" className="profile-image" />
+                  ) : (
+                    'Profile'
+                  )}
+                </Link>
+              </li>
+              <li><button onClick={handleLogout}>Uitloggen</button></li>
+            </>
           ) : (
-            <li><button href="/login">Inloggen</button></li>
+            <li><button onClick={() => navigate('/login')}>Inloggen</button></li>
           )}
         </ul>
       </nav>

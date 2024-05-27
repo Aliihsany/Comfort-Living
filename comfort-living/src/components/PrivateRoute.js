@@ -5,41 +5,48 @@ import axios from 'axios';
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem('token');
-  const [isVerified, setIsVerified] = useState(null);
+  const [userStatus, setUserStatus] = useState({ isVerified: null, isBlocked: null });
 
   useEffect(() => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
+        console.log('Decoded Token:', decodedToken);
         const currentTime = Date.now() / 1000;
 
         if (decodedToken.exp < currentTime) {
+          console.log('Token expired');
           localStorage.removeItem('token');
-          setIsVerified(false);
+          setUserStatus({ isVerified: false, isBlocked: false });
         } else {
           axios.get('http://localhost:3001/check-verification', {
             headers: {
-              Authorization: token,
+              Authorization: `Bearer ${token}`,
             },
           })
           .then(response => {
-            setIsVerified(response.data.isVerified);
+            console.log('Verification response:', response.data);
+            setUserStatus({
+              isVerified: response.data.isVerified,
+              isBlocked: response.data.isBlocked,
+            });
           })
-          .catch(() => {
-            setIsVerified(false);
+          .catch(error => {
+            console.error('Error during verification check:', error);
+            setUserStatus({ isVerified: false, isBlocked: false });
           });
         }
       } catch (error) {
         console.error('Invalid token:', error);
         localStorage.removeItem('token');
-        setIsVerified(false);
+        setUserStatus({ isVerified: false, isBlocked: false });
       }
     } else {
-      setIsVerified(false);
+      setUserStatus({ isVerified: false, isBlocked: false });
     }
   }, [token]);
 
-  if (isVerified === null) {
+  if (userStatus.isVerified === null || userStatus.isBlocked === null) {
     return <div>Loading...</div>;
   }
 
@@ -47,7 +54,11 @@ const PrivateRoute = ({ children }) => {
     return <Navigate to="/login" />;
   }
 
-  if (!isVerified) {
+  if (userStatus.isBlocked) {
+    return <Navigate to="/blocked" />;
+  }
+
+  if (!userStatus.isVerified) {
     return <Navigate to="/verify-email" />;
   }
 
