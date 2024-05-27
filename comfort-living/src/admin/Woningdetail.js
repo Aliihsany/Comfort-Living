@@ -9,7 +9,7 @@ const WoningDetails = () => {
 
   useEffect(() => {
     fetchResidence();
-  }, []);
+  }, [id]);
 
   const fetchResidence = async () => {
     try {
@@ -36,6 +36,11 @@ const WoningDetails = () => {
         <p><strong>Energielabel:</strong> {residence.energielabel}</p>
         <p><strong>Locatie:</strong> {residence.locatie}</p>
         <p><strong>Type:</strong> {residence.type}</p>
+        <div className="image-gallery">
+          {residence.afbeelding_1 && <img src={residence.afbeelding_1} alt="Afbeelding 1" />}
+          {residence.afbeelding_2 && <img src={residence.afbeelding_2} alt="Afbeelding 2" />}
+          {residence.afbeelding_3 && <img src={residence.afbeelding_3} alt="Afbeelding 3" />}
+        </div>
         <p><strong>Beschrijving:</strong> {residence.beschrijving}</p>
       </div>
     </div>
