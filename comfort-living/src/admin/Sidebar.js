@@ -4,13 +4,13 @@ import './Sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
-
-const  Sidebar= () => {
+const Sidebar = () => {
   return (
     <div className="sidebar">
       <a href="/"><FontAwesomeIcon icon={faArrowLeft} /></a>
       <Link to="/woningtoevoegen">Add Residence</Link>
       <Link to="/userpage">Users</Link>
+      <Link to="/woningen">View Residences</Link>
     </div>
   );
 };

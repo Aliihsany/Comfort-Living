@@ -14,11 +14,17 @@ const path = require('path');
 const port = 3001;
 
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+
+const upload = multer({
+  limits: {
+    fileSize: 15 * 1024 * 1024, // 15MB
+  },
+});
 
 app.use(cors());
 app.options('*', cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 const dbConfig = {
   host: process.env.DB_HOST,
@@ -320,6 +326,40 @@ app.get('/panden', (req, res) => {
     res.json(results);
   });
 });
+
+app.post('/panden', (req, res) => {
+  const { naam, kamerindeling, huurkosten, servicekosten, energielabel, locatie, type, straal, beschrijving, afbeelding_1, afbeelding_2, afbeelding_3 } = req.body;
+
+  const sql = 'INSERT INTO panden (naam, kamerindeling, huurkosten, servicekosten, energielabel, locatie, type, straal, beschrijving, afbeelding_1, afbeelding_2, afbeelding_3) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  const values = [naam, kamerindeling, huurkosten, servicekosten, energielabel, locatie, type, straal, beschrijving, afbeelding_1, afbeelding_2, afbeelding_3];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error('Error inserting data:', err);
+      res.status(500).json({ message: 'Error adding residence' });
+      return;
+    }
+    res.status(200).json({ message: 'Residence added successfully' });
+  });
+});
+
+app.get('/panden/:id', (req, res) => {
+  const { id } = req.params;
+  const sql = 'SELECT * FROM panden WHERE id = ?';
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error('Error fetching data:', err);
+      res.status(500).send('Error fetching residence');
+      return;
+    }
+    if (result.length === 0) {
+      res.status(404).send('Residence not found');
+      return;
+    }
+    res.json(result[0]);
+  });
+});
+
 
 app.get('/users/:id', verifyToken, (req, res) => {
   const userId = req.user.id;
