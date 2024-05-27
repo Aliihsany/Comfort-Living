@@ -94,11 +94,11 @@ function Homepage() {
         <div className="house-list">
           {filteredPanden.map(pand => (
             <div key={pand.id} className="house-item">
-              <img src={pand.afbeelding} alt={`House ${pand.id}`} />
-              <p>Kamers: {pand.aantal}</p>
-              <p>Grootte: {pand.grootte} m²</p>
-              <p>Min. prijs: €{pand.min}</p>
-              <p>Max. prijs: €{pand.max}</p>
+              <img src={pand.afbeelding_1} alt={`House ${pand.naam}`} />
+              <p>Kamerindeling: {pand.kamerindeling}</p>
+              <p>Huurkosten: €{pand.huurkosten}</p>
+              <p>Servicekosten: €{pand.servicekosten}</p>
+              <p>Straal: {pand.straal}</p>
               <p>Energielabel: {pand.energielabel}</p>
               <p>Locatie: {pand.locatie}</p>
               <p>Type: {pand.type}</p>
