@@ -8,8 +8,8 @@ import VerifyEmail from './components/VerifyEmail';
 import PrivateRoute from './components/PrivateRoute';
 import AdminPage from './admin/Adminpage'; // Adjusted import path
 import WoningToevoegen from './admin/Woningtoevoegen';
-import Woningen from './admin/Woningen';
-import WoningDetails from './admin/Woningdetail'; // Import the new component
+import Woninginfo from './components/Woninginfo'; // Corrected import path
+import Woningdetail from './admin/Woningdetail'; // Admin detail page import
 import Userpage from './admin/Userpage';
 
 import "slick-carousel/slick/slick.css";
@@ -31,10 +31,11 @@ function App() {
               </PrivateRoute>
             } 
           />
+          <Route path="/" element={<Homepage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/woningtoevoegen" element={<WoningToevoegen />} />
-          <Route path="/woningen" element={<Woningen />} />
-          <Route path="/woning/:id" element={<WoningDetails />} /> {/* New route */}
+          <Route path="/woning/:id" element={<Woninginfo />} /> {/* User view */}
+          <Route path="/woningdetail" element={<Woningdetail />} /> {/* Admin view */}
           <Route path="/userpage" element={<Userpage />} />
         </Routes>
       </div>
