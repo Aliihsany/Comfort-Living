@@ -6,6 +6,8 @@ import './Register.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope, faLock, faHome, faPhone, faMoneyBill, faGlobe, faRuler, faFilePdf, faCamera, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -104,11 +106,12 @@ const Register = () => {
         const passwordValidationResult = validatePassword(formData.password);
         if (passwordValidationResult) {
             setPasswordError(passwordValidationResult);
+            toast.error(passwordValidationResult);
             return;
         }
 
         if (!termsAccepted) {
-            alert('U moet akkoord gaan met de algemene voorwaarden om u te registreren.');
+            toast.error('U moet akkoord gaan met de algemene voorwaarden om u te registreren.');
             return;
         }
 
@@ -127,9 +130,13 @@ const Register = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            alert(response.data);
+            toast.success(response.data);
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 1000);
         } catch (error) {
             console.error('There was an error!', error);
+            toast.error('Er is een fout opgetreden bij het registreren.');
         }
     };
 
@@ -152,16 +159,8 @@ const Register = () => {
         setShowPasswordTooltip(false);
     };
 
-    const handleClick = () => {
-        setTimeout(() => {
-          window.location.href = '/login';
-        }, 1000);
-        
-      };
-
     return (
         <>
-
             <form onSubmit={handleSubmit} className="register-form">
                 <h1 style={{position: 'relative', bottom: '10px'}}>Register</h1>
                 <div className="flex-container">
@@ -322,7 +321,7 @@ const Register = () => {
                     <label htmlFor="terms"> Ik ga akkoord met de <a href="#" onClick={toggleTermsModal}>algemene voorwaarden</a></label>
                 </div>
                 <br></br>
-                <button onClick={handleClick} type="submit">Register</button>
+                <button type="submit">Register</button>
             </form>
 
             {showTerms && (
@@ -336,6 +335,7 @@ const Register = () => {
                     </div>
                 </div>
             )}
+            <ToastContainer />
         </>
     );
 };

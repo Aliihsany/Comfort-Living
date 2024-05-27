@@ -1,5 +1,4 @@
 require('dotenv').config();
-
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -112,23 +111,22 @@ app.post('/login', (req, res) => {
 });
 
 app.get('/check-verification', verifyToken, (req, res) => {
-  const sql = 'SELECT is_verified FROM users WHERE id = ?';
+  const sql = 'SELECT is_verified, blocked FROM users WHERE id = ?';
   db.query(sql, [req.user.id], (err, results) => {
     if (err) {
       return res.status(500).send('Error checking verification status');
     }
     if (results.length > 0) {
-      res.status(200).json({ isVerified: results[0].is_verified });
+      res.status(200).json({ isVerified: results[0].is_verified, isBlocked: results[0].blocked });
     } else {
       res.status(404).send('User not found');
     }
   });
 });
 
+
 app.get('/protected', verifyToken, (req, res) => {
   res.status(200).send('This is a protected route');
-  console.log(req.verifyToken);
-  console.log(verifyToken);
 });
 
 const validateEmail = (email) => {
@@ -354,7 +352,27 @@ app.get('/panden/:id', (req, res) => {
   });
 });
 
+app.put('/block-user', (req, res) => {
+  const { id } = req.body;
 
+  if (!id) {
+    return res.status(400).send('User ID is required');
+  }
+
+  const query = 'UPDATE users SET blocked = 1 WHERE id = ?';
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error('Error blocking user:', err);
+      return res.status(500).send('Error blocking user');
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).send('User not found');
+    }
+
+    res.status(200).send('User blocked successfully');
+  });
+});
 
 app.get('/users/:id', verifyToken, (req, res) => {
   const userId = req.user.id;

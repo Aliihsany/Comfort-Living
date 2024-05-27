@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem('token');
-  const [isVerified, setIsVerified] = useState(null);
+  const [userStatus, setUserStatus] = useState({ isVerified: null, isBlocked: null });
 
   useEffect(() => {
     if (token) {
@@ -15,7 +15,7 @@ const PrivateRoute = ({ children }) => {
 
         if (decodedToken.exp < currentTime) {
           localStorage.removeItem('token');
-          setIsVerified(false);
+          setUserStatus({ isVerified: false, isBlocked: false });
         } else {
           axios.get('http://localhost:3001/check-verification', {
             headers: {
@@ -23,23 +23,26 @@ const PrivateRoute = ({ children }) => {
             },
           })
           .then(response => {
-            setIsVerified(response.data.isVerified);
+            setUserStatus({
+              isVerified: response.data.isVerified,
+              isBlocked: response.data.isBlocked,
+            });
           })
           .catch(() => {
-            setIsVerified(false);
+            setUserStatus({ isVerified: false, isBlocked: false });
           });
         }
       } catch (error) {
         console.error('Invalid token:', error);
         localStorage.removeItem('token');
-        setIsVerified(false);
+        setUserStatus({ isVerified: false, isBlocked: false });
       }
     } else {
-      setIsVerified(false);
+      setUserStatus({ isVerified: false, isBlocked: false });
     }
   }, [token]);
 
-  if (isVerified === null) {
+  if (userStatus.isVerified === null || userStatus.isBlocked === null) {
     return <div>Loading...</div>;
   }
 
@@ -47,7 +50,11 @@ const PrivateRoute = ({ children }) => {
     return <Navigate to="/login" />;
   }
 
-  if (!isVerified) {
+  if (userStatus.isBlocked) {
+    return <Navigate to="/blocked" />;
+  }
+
+  if (!userStatus.isVerified) {
     return <Navigate to="/verify-email" />;
   }
 

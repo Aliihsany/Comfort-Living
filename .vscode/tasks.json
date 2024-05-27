@@ -1,0 +1,13 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "start",
+			"path": "comfort-living",
+			"problemMatcher": [],
+			"label": "npm: start - comfort-living",
+			"detail": "react-scripts start"
+		}
+	]
+}

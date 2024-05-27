@@ -6,12 +6,12 @@ import Login from './components/Login';
 import RegisterPage from './components/register';
 import VerifyEmail from './components/VerifyEmail';
 import PrivateRoute from './components/PrivateRoute';
-import AdminPage from './admin/Adminpage'; // Adjusted import path
+import AdminPage from './admin/Adminpage';
 import WoningToevoegen from './admin/Woningtoevoegen';
 import Woningen from './admin/Woningen';
-import WoningDetails from './admin/Woningdetail'; // Import the new component
+import WoningDetails from './admin/Woningdetail';
 import Userpage from './admin/Userpage';
-
+import Blocked from './components/Blocked';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -23,6 +23,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/blocked" element={<Blocked />} />
           <Route 
             path="/" 
             element={
