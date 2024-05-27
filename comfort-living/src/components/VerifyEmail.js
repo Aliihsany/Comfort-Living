@@ -61,7 +61,7 @@ const VerifyEmail = () => {
           />
         </div>
         <button type="submit" style={{ width: '100%', padding: '10px', backgroundColor: '#007BFF', color: 'white', border: 'none' }}>
-          Resend Verification Email
+        Verzend opnieuw Verificatie Email
         </button>
         <br /><br />
         <a href='/'>Email is geverifieerd? ga naar Home</a>

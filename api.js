@@ -45,7 +45,7 @@ const sqlCommands = [
 db.connect((err) => {
   if (err) {
     console.error('Error connecting to database:', err);
-    return;
+    process.exit(1); // Exit the process if unable to connect to the database
   }
   console.log('Connected to database');
   sqlCommands.forEach((sql) => {
@@ -256,7 +256,7 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
   const pdf = req.files['pdf'][0].buffer;
   const bewijsfoto = req.files['bewijsfoto'][0].buffer;
 
-  const checkEmailQuery = 'SELECT * FROM users WHERE email = ?';
+  const checkEmailQuery = 'SELECT * FROM gegevens, users WHERE users.email = ?';
   db.query(checkEmailQuery, [email], async (err, results) => {
     if (err) {
       console.error('Error checking email:', err);
@@ -270,16 +270,25 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
     try {
       const hashedPassword = await argon2.hash(password);
       const verificationToken = jwt.sign({ email }, 'verification-secret', { expiresIn: '15m' });
-      const query = `INSERT INTO users (voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, password, verification_token, is_verified) 
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-
-      db.query(query, [voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, hashedPassword, verificationToken, false], (err, result) => {
+      const query = `INSERT INTO users (voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, password, verification_token, is_verified, rol) 
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      db.query(query, [voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, hashedPassword, verificationToken, false, 'default_role'], (err, result) => {
         if (err) {
           console.error('Error inserting user:', err);
           res.status(500).send('Error registering user');
         } else {
-          sendVerificationEmail(email, verificationToken);
-          res.status(200).send('User registered successfully. Please verify your email.');
+          // Insert into gegevens table
+          const gegevensQuery = `INSERT INTO gegevens (voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, password, verification_token, is_verified, rol) 
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+          db.query(gegevensQuery, [voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, hashedPassword, verificationToken, false, 'default_role'], (err, result) => {
+            if (err) {
+              console.error('Error inserting gegevens:', err);
+              res.status(500).send('Error registering user');
+            } else {
+              sendVerificationEmail(email, verificationToken);
+              res.status(200).send('User registered successfully. Please verify your email.');
+            }
+          });
         }
       });
     } catch (err) {
@@ -288,6 +297,7 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
     }
   });
 });
+
 
 app.get('/verify-email', (req, res) => {
   const { token } = req.query;
@@ -457,3 +467,5 @@ app.put('/users/me', verifyToken, (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
+

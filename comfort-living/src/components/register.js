@@ -21,6 +21,7 @@ const Register = () => {
         voorkeur: '',
         straal: '',
         email: '',
+        rol: false,
         password: '',
         pdf: null,
         bewijsfoto: null,
@@ -123,6 +124,9 @@ const Register = () => {
                 data.append(key, formData[key]);
             }
         });
+
+        // Set rol value
+        data.append('rol', formData.rol ? 'true' : 'false');
 
         try {
             const response = await axios.post('http://localhost:3001/register', data, {
