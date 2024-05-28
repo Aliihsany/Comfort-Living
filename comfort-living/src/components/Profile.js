@@ -3,7 +3,6 @@ import axios from 'axios';
 import './css/Profile.css';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import Header from './Header';
-import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -22,7 +21,6 @@ const Profile = () => {
   const [residences, setResidences] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState({
     voornaam: false,
     achternaam: false,
