@@ -2,9 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './WoningenBewerken.css';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 
 const WoningenBewerken = () => {
+
+  const navigate = useNavigate();
+
+  const goToWoningenPage = () => {
+    setTimeout(() => {
+      navigate('/woningen');
+    }, 3000);
+  };
   const { id } = useParams();
   
   const [woning, setWoning] = useState({
@@ -151,7 +160,7 @@ const WoningenBewerken = () => {
           <label>Afbeelding 3:</label>
           <input type="file" name="afbeelding_3" onChange={handleFileChange} />
         </div>
-        <button type="submit" className="submit-button">Opslaan</button>
+        <button onClick={goToWoningenPage} type="submit" className="submit-button" on>Opslaan</button>
       </form>
       <ToastContainer />
     </div>
