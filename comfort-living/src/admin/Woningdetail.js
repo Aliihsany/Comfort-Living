@@ -22,7 +22,7 @@ const WoningDetails = () => {
   };
 
   if (!residence) {
-    return <div>Loading...</div>;
+    return <div>Laden...</div>;
   }
 
   return (

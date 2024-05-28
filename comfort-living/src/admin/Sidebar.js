@@ -8,9 +8,9 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <a href="/"><FontAwesomeIcon icon={faArrowLeft} /></a>
-      <Link to="/woningtoevoegen">Add Residence</Link>
-      <Link to="/userpage">Users</Link>
-      <Link to="/woningen">View Residences</Link>
+      <Link to="/woningtoevoegen">Voeg Woning</Link>
+      <Link to="/userpage">Gebruikers</Link>
+      <Link to="/woningen">bekijk Woning</Link>
     </div>
   );
 };

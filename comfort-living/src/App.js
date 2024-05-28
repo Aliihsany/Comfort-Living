@@ -39,7 +39,7 @@ function App() {
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/woningtoevoegen" element={<WoningToevoegen />} />
           <Route path="/woning/:id" element={<Woninginfo />} /> 
-          <Route path="/woningdetail" element={<Woningdetail />} />
+          <Route path="/woningdetail/:id" element={<Woningdetail />} />
           <Route path="/woningen" element={<Woningen />} />
           <Route path="/userpage" element={<Userpage />} />
           <Route path="/profile" element={<Profile />} />

@@ -3,12 +3,14 @@ import './Housefilter.css';
 
 const Housefilter = ({ onFilterChange }) => {
   const [filter, setFilter] = useState({
-    rooms: '',
-    size: '',
-    minPrice: '',
-    maxPrice: '',
-    energyLabel: '',
-    location: '', 
+    kamerindeling: '',
+    straal: '',
+    minHuurkosten: '',
+    maxHuurkosten: '',
+    minServicekosten: '',
+    maxServicekosten: '',
+    energielabel: '',
+    locatie: '', 
     type: '' 
   });
 
@@ -24,20 +26,28 @@ const Housefilter = ({ onFilterChange }) => {
   return (
     <div className="house-filter">
       <div className="filter-section">
-        <label>Aantal kamers:</label>
-        <input type="number" name="aantal" value={filter.aantal} onChange={handleChange} />
+        <label>Kamerindeling:</label>
+        <input type="number" name="kamerindeling" value={filter.kamerindeling} onChange={handleChange} />
       </div>
       <div className="filter-section">
-        <label>Grootte (m²):</label>
-        <input type="number" name="grootte" value={filter.grootte} onChange={handleChange} />
+        <label>Straal (m²):</label>
+        <input type="number" name="straal" value={filter.straal} onChange={handleChange} />
       </div>
       <div className="filter-section">
-        <label>Min. Prijs:</label>
-        <input type="number" name="min" value={filter.min} onChange={handleChange} />
+        <label>Huurkosten (min):</label>
+        <input type="number" name="minHuurkosten" value={filter.minHuurkosten} onChange={handleChange} />
       </div>
       <div className="filter-section">
-        <label>Max. Prijs:</label>
-        <input type="number" name="max" value={filter.max} onChange={handleChange} />
+        <label>Huurkosten (max):</label>
+        <input type="number" name="maxHuurkosten" value={filter.maxHuurkosten} onChange={handleChange} />
+      </div>
+      <div className="filter-section">
+        <label>Servicekosten (min):</label>
+        <input type="number" name="minServicekosten" value={filter.minServicekosten} onChange={handleChange} />
+      </div>
+      <div className="filter-section">
+        <label>Servicekosten (max):</label>
+        <input type="number" name="maxServicekosten" value={filter.maxServicekosten} onChange={handleChange} />
       </div>
       <div className="filter-section">
         <label>Energielabel:</label>

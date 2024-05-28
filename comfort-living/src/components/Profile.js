@@ -101,7 +101,7 @@ const Profile = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Laden...</div>;
   }
 
   if (error) {
@@ -112,7 +112,7 @@ const Profile = () => {
     <>
       <Header />
       <div className="profile-container">
-        <h1>Profile</h1>
+        <h1>Profiel</h1>
         <form onSubmit={handleSubmit}>
           {Object.keys(userData).map((key) => (
             <div key={key} className="profile-field">
@@ -133,7 +133,7 @@ const Profile = () => {
               />
             </div>
           ))}
-          <button type="submit">Update Profile</button>
+          <button type="submit">Update Profiel</button>
         </form>
       </div>
     </>

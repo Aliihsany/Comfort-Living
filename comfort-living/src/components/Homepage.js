@@ -8,16 +8,16 @@ import Slider from "react-slick";
 import Searchbar from './Searchbar';
 import Footer from './Footer';
 import Header from './Header';
-import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 function Homepage() {
   const [filter, setFilter] = useState({
-    afbeelding: '',
-    aantal: '',
-    grootte: '',
-    min: '',
-    max: '',
+    kamerindeling: '',
+    straal: '',
+    minHuurkosten: '',
+    maxHuurkosten: '',
+    minServicekosten: '',
+    maxServicekosten: '',
     energielabel: '',
     locatie: '',
     type: ''
@@ -61,13 +61,14 @@ function Homepage() {
     autoplaySpeed: 2000
   };
 
-  
   const filteredPanden = panden.filter(pand => {
     return (
-      (filter.aantal ? pand.kamerindeling === parseInt(filter.aantal) : true) &&
-      (filter.grootte ? pand.grootte >= parseInt(filter.grootte) : true) &&
-      (filter.min ? pand.huurkosten >= parseInt(filter.min) : true) &&
-      (filter.max ? pand.huurkosten <= parseInt(filter.max) : true) &&
+      (filter.kamerindeling ? pand.kamerindeling === parseInt(filter.kamerindeling) : true) &&
+      (filter.straal ? pand.straal >= parseInt(filter.straal) : true) &&
+      (filter.minHuurkosten ? pand.huurkosten >= parseInt(filter.minHuurkosten) : true) &&
+      (filter.maxHuurkosten ? pand.huurkosten <= parseInt(filter.maxHuurkosten) : true) &&
+      (filter.minServicekosten ? pand.servicekosten >= parseInt(filter.minServicekosten) : true) &&
+      (filter.maxServicekosten ? pand.servicekosten <= parseInt(filter.maxServicekosten) : true) &&
       (filter.energielabel ? pand.energielabel === filter.energielabel : true) &&
       (filter.locatie ? pand.locatie.toLowerCase().includes(filter.locatie.toLowerCase()) : true) &&
       (filter.type ? pand.type === filter.type : true)
@@ -97,7 +98,6 @@ function Homepage() {
         <Housefilter onFilterChange={handleFilterChange} />
         <div className="house-list">
           {filteredPanden.map(pand => (
-            
             <div key={pand.id} className="house-item" onClick={() => handleHouseClick(pand.id)}>
               <p>Naam: {pand.naam}</p>
               <img src={pand.afbeelding_1} alt={`House ${pand.id}`} />
@@ -107,7 +107,7 @@ function Homepage() {
               <p>Energielabel: {pand.energielabel}</p>
               <p>Locatie: {pand.locatie}</p>
               <p>Type: {pand.type}</p>
-              <p>Beschrijving: {pand.beschrijving}</p>
+              <p>Straal: {pand.straal}</p>
             </div>
           ))}
         </div>
