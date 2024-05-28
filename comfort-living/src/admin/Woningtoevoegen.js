@@ -85,31 +85,6 @@ const Woningtoevoegen = () => {
             <input type="text" value={locatie} onChange={(e) => setLocatie(e.target.value)} required />
           </label>
           <label className="form-label">
-            Huurkosten:
-            <input type="number" value={huurkosten} onChange={(e) => setHuurkosten(e.target.value)} required />
-          </label>
-          <label className="form-label">
-            Servicekosten:
-            <input type="number" value={servicekosten} onChange={(e) => setServicekosten(e.target.value)} required />
-          </label>
-          <label className="form-label">
-            Straal:
-            <input type="text" value={straal} onChange={(e) => setStraal(e.target.value)} required />
-          </label>
-          <label className="form-label">
-            Beschrijving:
-            <textarea value={beschrijving} onChange={(e) => setBeschrijving(e.target.value)} required />
-          </label>
-          <label className="form-label">
-            Afbeeldingen minimaal 3 fotos:
-            <input type="file" multiple onChange={handleImageChange} accept=".jpg,.jpeg,.png" />
-          </label>
-          <div className="image-slider">
-            {Object.values(afbeeldingen).map((image, index) => (
-              <img key={index} src={image} alt={`Preview ${index + 1}`} />
-            ))}
-          </div>
-          <label className="form-label">
             Type:
             <select value={type} onChange={(e) => setType(e.target.value)} required>
               <option value="">Selecteer type</option>
@@ -143,6 +118,32 @@ const Woningtoevoegen = () => {
               <option value="G">G</option>
             </select>
           </label>
+          <label className="form-label">
+            Huurkosten:
+            <input type="number" value={huurkosten} onChange={(e) => setHuurkosten(e.target.value)} required />
+          </label>
+          <label className="form-label">
+            Servicekosten:
+            <input type="number" value={servicekosten} onChange={(e) => setServicekosten(e.target.value)} required />
+          </label>
+          <label className="form-label">
+            Straal:
+            <input type="text" value={straal} onChange={(e) => setStraal(e.target.value)} required />
+          </label>
+          <label className="form-label">
+            Beschrijving:
+            <textarea value={beschrijving} onChange={(e) => setBeschrijving(e.target.value)} required />
+          </label>
+          <label className="form-label">
+            Afbeeldingen minimaal 3 fotos:
+            <input type="file" multiple onChange={handleImageChange} accept=".jpg,.jpeg,.png" />
+          </label>
+          <div className="image-slider">
+            {Object.values(afbeeldingen).map((image, index) => (
+              <img key={index} src={image} alt={`Preview ${index + 1}`} />
+            ))}
+          </div>
+          
           <button type="submit">Voeg woning toe</button>
         </form>
       </div>
