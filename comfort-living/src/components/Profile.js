@@ -140,24 +140,18 @@ const Profile = () => {
           }
         });
         if (response.status === 200) {
-          toast.success('Profile deleted successfully!', {
-            autoClose: 3000,
-          });
+          toast.success('Profile deleted successfully!');
           localStorage.removeItem('token');
           window.location.href = '/';
         } else {
-          toast.error('Error deleting profile', {
-            autoClose: 3000,
-          });
+          toast.error('Error deleting profile');
         }
       } catch (err) {
-        toast.error('Error deleting profile', {
-          autoClose: 3000,
-        });
+        toast.error('Error deleting profile');
       }
     }
   };
-
+  
   const handleResidenceDelete = async (residenceId) => {
     const confirmDelete = window.confirm('Are you sure you want to delete this residence?');
     if (!confirmDelete) {
@@ -220,10 +214,8 @@ const Profile = () => {
           <button type="button" className="delete-button" onClick={handleDelete}>
             Delete Profiel
           </button>
-        </form>
 
-        <br></br>
-        <h2>Ingeschreven Woningen</h2>
+          <h2>Ingeschreven Woningen</h2>
         <div className="residences-list">
           {residences.map((residence) => (
             <div key={residence.id} className="residence-item">
@@ -242,6 +234,10 @@ const Profile = () => {
             </div>
           ))}
         </div>
+        </form>
+
+        
+        
       </div>
       <ToastContainer />
     </>

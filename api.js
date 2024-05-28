@@ -8,6 +8,7 @@ const multer = require('multer');
 const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
+const path = require('path');
 
 const port = 3001;
 
@@ -102,7 +103,19 @@ const sendVerificationEmail = (email, token) => {
     from: process.env.EMAIL_USER,
     to: email,
     subject: 'Email Verification',
-    text: `Klik alstublieft op de volgende link om uw e-mail te verifiëren: ${verificationLink}`
+    html: `
+    <div style="text-align: center; font-family: Arial, sans-serif; color: #333;">
+      <img src="cid:unique@logo.png" alt="logo" width="150" height="150" style="margin-bottom: 20px;" />
+      <p style="font-size: 18px; margin-bottom: 20px;">Click the link below to verify your email:</p>
+      <a href="${verificationLink}" style="display: inline-block; padding: 10px 20px; font-size: 18px; color: #fff; background-color: #007BFF; text-decoration: none; border-radius: 5px; margin-bottom: 20px;">Verify Email</a>
+      <p style="font-size: 14px; color: #666;">The link is valid for 15 minutes.</p>
+    </div>
+  `,
+  attachments: [{
+    filename: 'logo.png',
+    path: path.join(__dirname, 'comfort-living/src/assets/logo.png'),
+    cid: 'unique@logo.png' 
+  }]
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
@@ -159,16 +172,19 @@ const verifyToken = (req, res, next) => {
     const sql = 'SELECT is_verified, blocked FROM users WHERE id = ?';
     db.query(sql, [decoded.id], (err, results) => {
       if (err) {
+        console.error('Error checking verification status:', err);
         return res.status(500).send('Error checking verification status');
       }
       if (results.length > 0) {
         req.user.isBlocked = results[0].blocked;
-        return next();
+        next();
       } else {
+        console.log('User verification check failed');
         return res.status(403).send('Email not verified');
       }
     });
   } catch (err) {
+    console.error('Invalid Token:', err);
     return res.status(401).send('Invalid Token');
   }
 };
@@ -277,9 +293,6 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
     user_id
   } = req.body;
 
-  if (!validateEmail(email)) {
-    return res.status(400).send('Invalid email format');
-  }
 
   const pdf = req.files['pdf'][0].buffer;
   const bewijsfoto = req.files['bewijsfoto'][0].buffer;
@@ -707,11 +720,36 @@ app.delete('/signup-residence/:residenceId', verifyToken, (req, res) => {
   });
 });
 
+app.put('/users/me', verifyToken, (req, res) => {
+  const userId = req.user.id;
+  const { voornaam, achternaam, geboortedatum, woonadres, telefoonnummer, jaarinkomen, voorkeur, straal, email } = req.body;
+
+  const sqlUpdateUser = 'UPDATE users SET voornaam = ?, achternaam = ?, geboortedatum = ?, woonadres = ?, telefoonnummer = ?, jaarinkomen = ?, voorkeur = ?, straal = ?, email = ? WHERE id = ?';
+  const sqlUpdateGegevens = 'UPDATE gegevens SET voornaam = ?, achternaam = ?, geboortedatum = ?, woonadres = ?, telefoonnummer = ?, jaarinkomen = ?, voorkeur = ?, straal = ?, email = ? WHERE email = ?';
+
+  db.query(sqlUpdateUser, [voornaam, achternaam, geboortedatum, woonadres, telefoonnummer, jaarinkomen, voorkeur, straal, email, userId], (err, result) => {
+    if (err) {
+      console.error('Error updating user:', err);
+      res.status(500).send('Server error');
+      return;
+    }
+
+    db.query(sqlUpdateGegevens, [voornaam, achternaam, geboortedatum, woonadres, telefoonnummer, jaarinkomen, voorkeur, straal, email, email], (err, result) => {
+      if (err) {
+        console.error('Error updating gegevens:', err);
+        res.status(500).send('Server error');
+        return;
+      }
+
+      res.status(200).send('Profile updated successfully');
+    });
+  });
+});
+
 app.delete('/users/me', verifyToken, (req, res) => {
   const userId = req.user.id;
 
   const sql = 'DELETE FROM users WHERE id = ?';
-
   db.query(sql, [userId], (err, result) => {
     if (err) {
       console.error('Error deleting user:', err);
@@ -719,14 +757,11 @@ app.delete('/users/me', verifyToken, (req, res) => {
       return;
     }
 
-    if (result.affectedRows === 0) {
-      res.status(404).send('User not found');
-      return;
-    }
-
     res.status(200).send('User deleted successfully');
   });
 });
+
+
 
 app.get('/users/me/residences', verifyToken, (req, res) => {
   const userId = req.user.id;
