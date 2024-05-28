@@ -10,7 +10,7 @@ const Sidebar = () => {
       <a href="/"><FontAwesomeIcon icon={faArrowLeft} /></a>
       <Link to="/woningtoevoegen">Voeg Woning</Link>
       <Link to="/userpage">Gebruikers</Link>
-      <Link to="/woningen">bekijk Woning</Link>
+      <Link to="/woningen">Bekijk Woning</Link>
     </div>
   );
 };
