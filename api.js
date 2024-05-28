@@ -106,9 +106,9 @@ const sendVerificationEmail = (email, token) => {
     html: `
     <div style="text-align: center; font-family: Arial, sans-serif; color: #333;">
       <img src="cid:unique@logo.png" alt="logo" width="150" height="150" style="margin-bottom: 20px;" />
-      <p style="font-size: 18px; margin-bottom: 20px;">Click the link below to verify your email:</p>
+      <p style="font-size: 18px; margin-bottom: 20px;">Klik op de onderstaande link om uw e-mailadres te verifiëren:</p>
       <a href="${verificationLink}" style="display: inline-block; padding: 10px 20px; font-size: 18px; color: #fff; background-color: #007BFF; text-decoration: none; border-radius: 5px; margin-bottom: 20px;">Verify Email</a>
-      <p style="font-size: 14px; color: #666;">The link is valid for 15 minutes.</p>
+      <p style="font-size: 14px; color: #666;">De link is 15 minuten geldig.</p>
     </div>
   `,
   attachments: [{
