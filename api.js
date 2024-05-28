@@ -277,9 +277,7 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
     user_id
   } = req.body;
 
-  if (!validateEmail(email)) {
-    return res.status(400).send('Invalid email format');
-  }
+ 
 
   const pdf = req.files['pdf'][0].buffer;
   const bewijsfoto = req.files['bewijsfoto'][0].buffer;
