@@ -68,34 +68,6 @@ const WoningenBewerken = () => {
           <input type="text" name="locatie" value={woning.locatie} onChange={handleChange} />
         </div>
         <div className="form-group">
-          <label>Huurkosten:</label>
-          <input type="number" name="huurkosten" value={woning.huurkosten} onChange={handleChange} />
-        </div>
-        <div className="form-group">
-          <label>Servicekosten:</label>
-          <input type="number" name="servicekosten" value={woning.servicekosten} onChange={handleChange} />
-        </div>
-        <div className="form-group">
-          <label>Straal:</label>
-          <input type="text" name="straal" value={woning.straal} onChange={handleChange} />
-        </div>
-        <div className="form-group">
-          <label>Beschrijving:</label>
-          <textarea name="beschrijving" value={woning.beschrijving} onChange={handleChange} />
-        </div>
-        <div className="form-group">
-          <label>Afbeelding 1:</label>
-          <input type="file" name="afbeelding_1" onChange={handleChange} />
-        </div>
-        <div className="form-group">
-          <label>Afbeelding 2:</label>
-          <input type="file" name="afbeelding_2" onChange={handleChange} />
-        </div>
-        <div className="form-group">
-          <label>Afbeelding 3:</label>
-          <input type="file" name="afbeelding_3" onChange={handleChange} />
-        </div>
-        <div className="form-group">
           <label>Type:</label>
           <select name="type" value={woning.type} onChange={handleChange}>
             <option value="">Selecteer type</option>
@@ -129,6 +101,35 @@ const WoningenBewerken = () => {
             <option value="G">G</option>
           </select>
         </div>
+        <div className="form-group">
+          <label>Huurkosten:</label>
+          <input type="number" name="huurkosten" value={woning.huurkosten} onChange={handleChange} />
+        </div>
+        <div className="form-group">
+          <label>Servicekosten:</label>
+          <input type="number" name="servicekosten" value={woning.servicekosten} onChange={handleChange} />
+        </div>
+        <div className="form-group">
+          <label>Straal:</label>
+          <input type="text" name="straal" value={woning.straal} onChange={handleChange} />
+        </div>
+        <div className="form-group">
+          <label>Beschrijving:</label>
+          <textarea name="beschrijving" value={woning.beschrijving} onChange={handleChange} />
+        </div>
+        <div className="form-group">
+          <label>Afbeelding 1:</label>
+          <input type="file" name="afbeelding_1" onChange={handleChange} />
+        </div>
+        <div className="form-group">
+          <label>Afbeelding 2:</label>
+          <input type="file" name="afbeelding_2" onChange={handleChange} />
+        </div>
+        <div className="form-group">
+          <label>Afbeelding 3:</label>
+          <input type="file" name="afbeelding_3" onChange={handleChange} />
+        </div>
+        
         <button type="submit" className="submit-button">Opslaan</button>
       </form>
     </div>
