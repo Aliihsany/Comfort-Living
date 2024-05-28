@@ -17,6 +17,8 @@ import Profile from './components/Profile';
 import Over from './components/Overons';
 import Compare from './components/Compare';
 import Unauthorized from './components/Unauthorized';
+import WoningenBewerken from './admin/WoningenBewerken';
+
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -81,10 +83,10 @@ function App() {
               </PrivateRoute>
             } 
           />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/profile" element={<Profile />} />
           <Route path="/over" element={<Over />} />
           <Route path="/compare/:id" element={<Compare />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route exact path="/woningen/:id/bewerken" element={<WoningenBewerken />} />
         </Routes>
       </div>
     </Router>

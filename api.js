@@ -273,7 +273,8 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
     voorkeur,
     straal,
     email,
-    password
+    password,
+    user_id
   } = req.body;
 
   if (!validateEmail(email)) {
@@ -304,9 +305,9 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
           console.error('Error inserting user:', err);
           res.status(500).send('Error registering user');
         } else {
-          const gegevensQuery = `INSERT INTO gegevens (voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, password, verification_token, is_verified, rol) 
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-          db.query(gegevensQuery, [voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, hashedPassword, verificationToken, false, 'default_role'], (err, result) => {
+          const gegevensQuery = `INSERT INTO gegevens (voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, password, verification_token, is_verified, rol, user_id) 
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, true)`;
+          db.query(gegevensQuery, [voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, hashedPassword, verificationToken, false, 'default_role', user_id], (err, result) => {
             if (err) {
               console.error('Error inserting gegevens:', err);
               res.status(500).send('Error registering user');
@@ -542,20 +543,65 @@ app.get('/users/me', verifyToken, (req, res) => {
   });
 });
 
-app.put('/users/me', verifyToken, (req, res) => {
-  const userId = req.user.id;
-  const { voornaam, achternaam, geboortedatum, woonadres, telefoonnummer, jaarinkomen, voorkeur, straal, email } = req.body;
+app.delete('/users/:id', (req, res) => {
+  const userId = req.params.id;
+  const query = 'DELETE FROM users WHERE id = ?';
 
-  const sql = 'UPDATE users SET voornaam = ?, achternaam = ?, geboortedatum = ?, woonadres = ?, telefoonnummer = ?, jaarinkomen = ?, voorkeur = ?, straal = ?, email = ? WHERE id = ?';
-  
-  db.query(sql, [voornaam, achternaam, geboortedatum, woonadres, telefoonnummer, jaarinkomen, voorkeur, straal, email, userId], (err, result) => {
+  db.query(query, [userId], (err, result) => {
     if (err) {
-      console.error('Error updating user:', err);
-      res.status(500).send('Server error');
+      console.error('Error deleting user:', err);
+      return res.status(500).json({ error: 'Error deleting user' });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.status(200).json({ message: 'User deleted successfully' });
+  });
+});
+
+app.delete('/panden/:id', (req, res) => {
+  const residenceId = req.params.id;
+  const query = 'DELETE FROM panden WHERE id = ?';
+
+  db.query(query, [residenceId], (err, result) => {
+    if (err) {
+      console.error('Error deleting residence:', err);
+      return res.status(500).json({ error: 'Error deleting residence' });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Residence not found' });
+    }
+
+    res.status(200).json({ message: 'Residence deleted successfully' });
+  });
+});
+
+// PUT endpoint for updating residence details
+app.put('/panden/:id', (req, res) => {
+  const residenceId = req.params.id;
+  const { naam, kamerindeling, huurkosten, servicekosten, energielabel, locatie, type, straal, beschrijving, afbeelding_1, afbeelding_2, afbeelding_3 } = req.body;
+
+  // Query to update residence details in the database
+  const query = 'UPDATE panden SET naam = ?, kamerindeling = ?, huurkosten = ?, servicekosten = ?, energielabel = ?, locatie = ?, type = ?, straal = ?, beschrijving = ?, afbeelding_1 = ?, afbeelding_2 = ?, afbeelding_3 = ? WHERE id = ?';
+  const values = [naam, kamerindeling, huurkosten, servicekosten, energielabel, locatie, type, straal, beschrijving, afbeelding_1, afbeelding_2, afbeelding_3, residenceId];
+
+  // Execute the query to update residence details
+  db.query(query, values, (err, result) => {
+    if (err) {
+      console.error('Error updating residence details:', err);
+      res.status(500).json({ error: 'Error updating residence details' });
       return;
     }
 
-    res.status(200).send('Profile updated successfully');
+    if (result.affectedRows === 0) {
+      res.status(404).json({ error: 'Residence not found' });
+      return;
+    }
+
+    res.status(200).json({ message: 'Residence details updated successfully' });
   });
 });
 
@@ -712,6 +758,7 @@ app.get('/users/me/residences', verifyToken, (req, res) => {
     res.json(results);
   });
 });
+
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

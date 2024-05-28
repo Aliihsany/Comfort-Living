@@ -21,6 +21,22 @@ const WoningDetails = () => {
     }
   };
 
+  const handleDeleteResidence = async () => {
+    const confirmDelete = window.confirm('Weet je zeker dat je deze woning wilt verwijderen?');
+    if (confirmDelete) {
+      try {
+        await fetch(`http://localhost:3001/panden/${id}`, {
+          method: 'DELETE',
+        });
+        // Optioneel: je kunt de gebruiker doorsturen naar een andere pagina na verwijdering
+        window.location.href = '/'; // Doorsturen naar de homepagina
+      } catch (error) {
+        console.error('Fout bij het verwijderen van de woning:', error);
+      }
+    }
+  };
+
+
   if (!residence) {
     return <div>Loading...</div>;
   }

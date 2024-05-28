@@ -28,7 +28,7 @@
   }
   
   .woningen-page table th, .woningen-page table td {
-    padding: 10px;
+    /* padding: 10px; */
     border: 1px solid #ddd;
     text-align: left;
   }
