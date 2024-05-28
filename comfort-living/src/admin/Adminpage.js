@@ -10,6 +10,7 @@ const Adminpage = () => {
     <div className="admin-page">
       <Sidebar />
       <div className="admin-content">
+        <h1>Welkom Admin</h1>
         <Routes>
           <Route path="woningtoevoegen" element={<Woningtoevoegen />} />
           <Route path="userpage" element={<Userpage />} />

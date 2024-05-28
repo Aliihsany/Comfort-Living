@@ -44,8 +44,8 @@ function Homepage() {
   }, []);
 
   const images = [
-    "../public/src/assets/duikboot.png",
-    "https://via.placeholder.com/600x400/00ff00/ffffff?text=Image+2",
+    "https://images.pexels.com/photos/164558/pexels-photo-164558.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    "https://www.google.com/search?sca_esv=9d20818f254477f4&sca_upv=1&sxsrf=ADLYWIKLZIuDXl6EBT-wwsFd2kovrE9TCg:1716888746081&q=woningen&uds=ADvngMg56oHTv53WHmtoXL0DcsuKgmf9OFDI1xMoM41dO8yfA72DxCmkei32JtQKb5Yg7icL5m6ZL9f06uhPx_zwRBI7odvPbrsLtoyIOzkoHEOxMWNKm_M-WL4Pt9g-oOa7MtHkiPQQoSbEBhhjUo6Fkc-dmA_kBE35r8HoiOzZlRAd66_2FS3rMLHrypL2EeajEgwrlrGBoCKeNPa8lhwH4lw9B1QKVPwOenl-oNhMjdbMn2kgcTxNLUMlz-xA1VapiuuyeTOi0lrdX0smzT5LI7IOHYEvmA&udm=2&prmd=invbz&sa=X&ved=2ahUKEwjj0dD-hLCGAxVjS0EAHZD0C3kQtKgLegQIERAB&biw=1440&bih=813&dpr=2#vhid=b5Z5IFrx29-WmM&vssid=mosaic",
     "https://via.placeholder.com/600x400/0000ff/ffffff?text=Image+3",
     "https://via.placeholder.com/600x400/ffff00/000000?text=Image+4",
     "https://via.placeholder.com/600x400/00ffff/000000?text=Image+5"
