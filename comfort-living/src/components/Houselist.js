@@ -22,7 +22,7 @@ const Houselist = () => {
   return (
     <div className="house-list-container">
       <div className="house-list">
-        <h1>Houses for Rent</h1>
+        <h1>Huizen voor huur</h1>
         <ul>
           {houses.map((house) => (
             <li key={house.id} className="house-item">

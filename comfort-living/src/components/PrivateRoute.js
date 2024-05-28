@@ -47,7 +47,7 @@ const PrivateRoute = ({ children, requiredRole }) => {
   }, [token]);
 
   if (userStatus.isVerified === null || userStatus.isBlocked === null || userStatus.role === null) {
-    return <div>Loading...</div>;
+    return <div>Laden...</div>;
   }
 
   if (!token) {

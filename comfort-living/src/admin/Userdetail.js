@@ -8,7 +8,7 @@ const UserDetailsModal = ({ user, onClose }) => {
     <div className="modal">
       <div className="modal-content">
         <span className="close" onClick={onClose}>&times;</span>
-        <h2>User Details</h2>
+        <h2>Gebruiker Details</h2>
         <p>ID: {user.id}</p>
         <p>Voornaam: {user.voornaam}</p>
         <p>Achternaam: {user.achternaam}</p>

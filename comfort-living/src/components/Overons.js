@@ -15,7 +15,7 @@ const Overons = () => {
     <div className="overons">
       {!termsAccepted && (
         <div className="terms-bar">
-          <p>By using this site, you accept our <a href="#" onClick={() => setShowPopup(true)}>terms and conditions</a>.</p>
+          <p>als je doorgaat op deze site dan accepteer je onze<a href="#" onClick={() => setShowPopup(true)}>terms en condities</a>.</p>
         </div>
       )}
       {showPopup && (

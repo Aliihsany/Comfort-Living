@@ -43,7 +43,7 @@ const Woningen = () => {
     <div className="app">
       <Sidebar />
       <div className="woningen-page">
-        <h1>Residences</h1>
+        <h1>Woningen</h1>
         <table>
           <thead>
             <tr>
