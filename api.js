@@ -749,17 +749,45 @@ app.put('/users/me', verifyToken, (req, res) => {
 app.delete('/users/me', verifyToken, (req, res) => {
   const userId = req.user.id;
 
-  const sql = 'DELETE FROM users WHERE id = ?';
-  db.query(sql, [userId], (err, result) => {
+  db.beginTransaction((err) => {
     if (err) {
-      console.error('Error deleting user:', err);
-      res.status(500).send('Server error');
-      return;
+      console.error('Error starting transaction:', err);
+      return res.status(500).send('Server error');
     }
 
-    res.status(200).send('User deleted successfully');
+    const deleteResidencesSql = 'DELETE FROM user_residences WHERE user_id = ?';
+    db.query(deleteResidencesSql, [userId], (err, result) => {
+      if (err) {
+        console.error('Error deleting user residences:', err);
+        return db.rollback(() => {
+          res.status(500).send('Server error');
+        });
+      }
+
+      const deleteUserSql = 'DELETE FROM users WHERE id = ?';
+      db.query(deleteUserSql, [userId], (err, result) => {
+        if (err) {
+          console.error('Error deleting user:', err);
+          return db.rollback(() => {
+            res.status(500).send('Server error');
+          });
+        }
+
+        db.commit((err) => {
+          if (err) {
+            console.error('Error committing transaction:', err);
+            return db.rollback(() => {
+              res.status(500).send('Server error');
+            });
+          }
+
+          res.status(200).send('User deleted successfully');
+        });
+      });
+    });
   });
 });
+
 
 
 

@@ -235,9 +235,6 @@ const Profile = () => {
           ))}
         </div>
         </form>
-
-        
-        
       </div>
       <ToastContainer />
     </>
