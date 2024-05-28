@@ -450,19 +450,49 @@ app.put('/users/me', verifyToken, (req, res) => {
   const userId = req.user.id;
   const { voornaam, achternaam, geboortedatum, woonadres, telefoonnummer, jaarinkomen, voorkeur, straal, email } = req.body;
 
-  const sql = 'UPDATE users SET voornaam = ?, achternaam = ?, geboortedatum = ?, woonadres = ?, telefoonnummer = ?, jaarinkomen = ?, voorkeur = ?, straal = ?, email = ? WHERE id = ?';
-  
-  db.query(sql, [voornaam, achternaam, geboortedatum, woonadres, telefoonnummer, jaarinkomen, voorkeur, straal, email, userId], (err, result) => {
+  const sqlUpdateUser = 'UPDATE users SET voornaam = ?, achternaam = ?, geboortedatum = ?, woonadres = ?, telefoonnummer = ?, jaarinkomen = ?, voorkeur = ?, straal = ?, email = ? WHERE id = ?';
+  const sqlUpdateGegevens = 'UPDATE gegevens SET voornaam = ?, achternaam = ?, geboortedatum = ?, woonadres = ?, telefoonnummer = ?, jaarinkomen = ?, voorkeur = ?, straal = ?, email = ? WHERE email = ?';
+
+  db.query(sqlUpdateUser, [voornaam, achternaam, geboortedatum, woonadres, telefoonnummer, jaarinkomen, voorkeur, straal, email, userId], (err, result) => {
     if (err) {
       console.error('Error updating user:', err);
       res.status(500).send('Server error');
       return;
     }
 
-    res.status(200).send('Profile updated successfully');
+    db.query(sqlUpdateGegevens, [voornaam, achternaam, geboortedatum, woonadres, telefoonnummer, jaarinkomen, voorkeur, straal, email, email], (err, result) => {
+      if (err) {
+        console.error('Error updating gegevens:', err);
+        res.status(500).send('Server error');
+        return;
+      }
+
+      res.status(200).send('Profile updated successfully');
+    });
   });
 });
 
+
+app.delete('/users/me', verifyToken, (req, res) => {
+  const userId = req.user.id;
+
+  const sql = 'DELETE FROM users WHERE id = ?';
+
+  db.query(sql, [userId], (err, result) => {
+    if (err) {
+      console.error('Error deleting user:', err);
+      res.status(500).send('Server error');
+      return;
+    }
+
+    if (result.affectedRows === 0) {
+      res.status(404).send('User not found');
+      return;
+    }
+
+    res.status(200).send('User deleted successfully');
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

@@ -25,22 +25,22 @@ const Userpage = () => {
   const handleBlockUser = async (id) => {
     try {
       const response = await axios.put('http://localhost:3001/block-user', { id });
-      console.log(response.data); // Log the response to check the success message
-      fetchUsers(); // Refresh the list after blocking
+      console.log(response.data);
+      fetchUsers();
     } catch (error) {
       console.error('Error blocking user:', error.response ? error.response.data : error.message);
     }
   };
 
   const handleDeleteUser = async (id) => {
-    // Vraag om bevestiging
+    
     const confirmDelete = window.confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?');
 
     if (confirmDelete) {
       try {
         const response = await axios.delete(`http://localhost:3001/users/${id}`);
-        console.log(response.data); // Log the response to check the success message
-        fetchUsers(); // Refresh the list after deletion
+        console.log(response.data); 
+        fetchUsers();
       } catch (error) {
         console.error('Error deleting user:', error.response ? error.response.data : error.message);
       }
@@ -69,7 +69,7 @@ const Userpage = () => {
               <th>Voornaam</th>
               <th>Achternaam</th>
               <th>Email</th>
-              <th>Geblokkeerd</th> {/* Nieuwe kolom voor geblokkeerde status */}
+              <th>Geblokkeerd</th> 
               <th>Acties</th>
               <th>Verwijderen</th> 
             </tr>
@@ -81,7 +81,7 @@ const Userpage = () => {
                 <td>{user.voornaam}</td>
                 <td>{user.achternaam}</td>
                 <td>{user.email}</td>
-                <td>{user.blocked ? 'Ja' : 'Nee'}</td> {/* Geblokkeerde status weergeven */}
+                <td>{user.blocked ? 'Ja' : 'Nee'}</td> 
                 <td>
                   <button onClick={() => handleBlockUser(user.id)} disabled={user.blocked}>
                     {user.blocked ? 'Geblokkeerd' : 'Blokkeer'}

@@ -43,10 +43,9 @@
   cursor: pointer;
 }
 
-button[type="submit"] {
+button[type="submit"], .delete-button {
   width: 100%;
   padding: 10px;
-  background-color: #007BFF;
   color: white;
   border: none;
   border-radius: 5px;
@@ -54,6 +53,18 @@ button[type="submit"] {
   margin-top: 20px;
 }
 
+button[type="submit"] {
+  background-color: #007BFF;
+}
+
 button[type="submit"]:hover {
   background-color: #0056b3;
+}
+
+.delete-button {
+  background-color: #FF0000;
+}
+
+.delete-button:hover {
+  background-color: #CC0000;
 }

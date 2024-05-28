@@ -10,8 +10,8 @@
   top: 50%; 
   left: 50%; 
   transform: translate(-50%, -50%); 
-  overflow: auto; /* Ensures scrolling if content overflows */
-  max-height: 90%; /* Limits the height to prevent overflow */
+  overflow: auto; 
+  max-height: 90%; 
 }
 
 .woningtoevoegen h1 {
@@ -72,8 +72,8 @@
 }
 
 .image-slider img {
-  width: 100px !important; /* Ensures the width is set to 100px */
-  height: 100px !important; /* Ensures the height is set to 100px */
+  width: 100px !important; 
+  height: 100px !important; 
   object-fit: cover;
   margin: 5px;
   border-radius: 5px;

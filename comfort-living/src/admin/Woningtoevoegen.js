@@ -33,7 +33,7 @@ const Woningtoevoegen = () => {
     })
     .then(data => {
       console.log('Success:', data);
-      // Optionally clear the form
+      
       setNaam('');
       setKamerindeling('');
       setHuurkosten('');

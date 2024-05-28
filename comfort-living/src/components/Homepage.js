@@ -99,7 +99,7 @@ function Homepage() {
           {filteredPanden.map(pand => (
             
             <div key={pand.id} className="house-item" onClick={() => handleHouseClick(pand.id)}>
-              <p>Naam: {pand.naam}</p>
+              <h2>{pand.naam}</h2>
               <img src={pand.afbeelding_1} alt={`House ${pand.id}`} />
               <p>Kamers: {pand.kamerindeling}</p>
               <p>Huurkosten: €{pand.huurkosten}</p>

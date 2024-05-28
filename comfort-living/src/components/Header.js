@@ -86,7 +86,7 @@ const Header = () => {
                   {profileImage ? (
                     <img src={profileImage} alt="Profile" className="profile-image" />
                   ) : (
-                    'Profile'
+                    'Profiel '
                   )}
                 </Link>
               </li>
