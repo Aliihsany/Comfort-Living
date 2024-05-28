@@ -1,28 +1,51 @@
 .searchbar-container {
-    background-color: #B7CFDC;
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .searchbar-container h1 {
-    color: white;
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  .search-input-container {
-    display: flex;
-    justify-content: center;
-  }
-  
-  .search-input-container input {
-    width: 50%;
-    padding: 10px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-  }
-  
-  .search-input-container input::placeholder {
-    color: #999999;
-  }
+  background-color: #B7CFDC;
+  padding: 20px;
+  text-align: center;
+}
+
+.searchbar-container h1 {
+  color: white;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.search-input-container {
+  display: flex;
+  justify-content: center;
+}
+
+.search-input-container input {
+  width: 50%;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+}
+
+.search-input-container input::placeholder {
+  color: #999999;
+}
+
+.results-container {
+  margin-top: 20px;
+}
+
+.residence-card {
+  background-color: white;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+
+.residence-card:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.residence-image {
+  max-width: 100%;
+  height: auto;
+  max-height: 150px;
+}

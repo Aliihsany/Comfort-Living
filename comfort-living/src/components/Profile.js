@@ -4,6 +4,8 @@ import './css/Profile.css';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import Header from './Header';
 import { useNavigate, Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Profile = () => {
   const [userData, setUserData] = useState({
@@ -47,13 +49,14 @@ const Profile = () => {
           setUserData({
             voornaam: data.voornaam,
             achternaam: data.achternaam,
+            email: data.email,
             geboortedatum: data.geboortedatum,
             woonadres: data.woonadres,
             telefoonnummer: data.telefoonnummer,
             jaarinkomen: data.jaarinkomen,
             voorkeur: data.voorkeur,
-            straal: data.straal,
-            email: data.email
+            straal: data.straal
+            
           });
         } else {
           setError('Error fetching data');
@@ -113,12 +116,46 @@ const Profile = () => {
         }
       });
       if (response.status === 200) {
-        alert('Profile updated successfully!');
+        toast.success('Profile updated successfully!', {
+          autoClose: 3000,
+        });
       } else {
-        alert(`Error updating profile: ${response.data}`);
+        toast.error(`Error updating profile: ${response.data}`, {
+          autoClose: 3000,
+        });
       }
     } catch (err) {
-      alert('Error updating profile');
+      toast.error('Error updating profile', {
+        autoClose: 3000,
+      });
+    }
+  };
+
+  const handleDelete = async () => {
+    const token = localStorage.getItem('token');
+    if (window.confirm('Are you sure you want to delete your profile?')) {
+      try {
+        const response = await axios.delete('http://localhost:3001/users/me', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        if (response.status === 200) {
+          toast.success('Profile deleted successfully!', {
+            autoClose: 3000,
+          });
+          localStorage.removeItem('token');
+          window.location.href = '/';
+        } else {
+          toast.error('Error deleting profile', {
+            autoClose: 3000,
+          });
+        }
+      } catch (err) {
+        toast.error('Error deleting profile', {
+          autoClose: 3000,
+        });
+      }
     }
   };
 
@@ -174,7 +211,7 @@ const Profile = () => {
     <>
       <Header />
       <div className="profile-container">
-        <h1>Profile</h1>
+        <h1>Profiel</h1>
         <form onSubmit={handleSubmit}>
           {Object.keys(userData).map((key) => (
             <div key={key} className="profile-field">
@@ -195,7 +232,10 @@ const Profile = () => {
               />
             </div>
           ))}
-          <button type="submit">Update Profile</button>
+          <button type="submit">Update Profiel</button>
+          <button type="button" className="delete-button" onClick={handleDelete}>
+            Delete Profiel
+          </button>
         </form>
 
         
@@ -222,6 +262,7 @@ const Profile = () => {
           ))}
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 };

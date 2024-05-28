@@ -51,7 +51,7 @@ const Searchbar = () => {
           {filteredPanden.map((pand) => (
             <div key={pand.naam} className="residence-card" onClick={() => handleHouseClick(pand.id)}>
               <h2 onClick={() => handleHouseClick(pand.id)}>{pand.naam}</h2>
-              <p><img onClick={() => handleHouseClick(pand.id)} src={pand.afbeelding_1} alt="Afbeelding 1" /></p>
+              <p><img className="residence-image" onClick={() => handleHouseClick(pand.id)} src={pand.afbeelding_1} alt="Afbeelding 1" /></p>
               <p onClick={() => handleHouseClick(pand.id)}>Huurkosten: {pand.huurkosten}</p>
               <p onClick={() => handleHouseClick(pand.id)}>Locatie: {pand.locatie}</p>
               <p onClick={() => handleHouseClick(pand.id)}>Type: {pand.type}</p>
