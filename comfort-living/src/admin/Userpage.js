@@ -112,8 +112,9 @@ const Userpage = () => {
               <th>Achternaam</th>
               <th>Email</th>
               <th>Geblokkeerd</th>
-              <th>Acties</th>
               <th>Rol</th>
+              <th>Acties</th>
+              <th>Promote</th>
               <th>Verwijderen</th> 
             </tr>
           </thead>
