@@ -68,9 +68,9 @@ const Woningen = () => {
                 </td>
                 <td><img src={residence.afbeelding_1} alt="Afbeelding 1" /></td>
                 <td>{residence.kamerindeling}</td>
-                <td>{residence.huurkosten}</td>
-                <td>{residence.servicekosten}</td>
-                <td>{residence.straal}</td>
+                <td>€{residence.huurkosten}</td>
+                <td>€{residence.servicekosten}</td>
+                <td>{residence.straal}km²</td>
                 <td>{residence.energielabel}</td>
                 <td>{residence.locatie}</td>
                 <td>{residence.type}</td>
