@@ -197,7 +197,10 @@ const Profile = () => {
           ))}
           <button type="submit">Update Profile</button>
         </form>
-        <h2>Ingeschreven Residences</h2>
+
+        
+        <br></br>
+        <h2>Ingeschreven Wonigen</h2>
         <div className="residences-list">
           
           {residences.map((residence) => (

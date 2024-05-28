@@ -92,7 +92,7 @@ const Woninginfo = () => {
       <Header /> 
       <div className="woninginfo-page">
         <nav>
-          <a href="/">Home</a> &gt; <a href="/aanbod">Aanbod</a> &gt; <span>{residence.naam}</span>
+          <a href="/">Home</a> &gt; <span>Woning: {residence.naam}</span>
         </nav>
         <div className="residence-container">
           <div className="residence-left">

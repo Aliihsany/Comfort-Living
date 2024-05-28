@@ -15,7 +15,7 @@ const storage = multer.memoryStorage();
 
 const upload = multer({
   limits: {
-    fileSize: 15 * 1024 * 1024, // 15MB
+    fileSize: 15 * 1024 * 1024, 
   },
 });
 
@@ -44,7 +44,7 @@ const sqlCommands = [
 db.connect((err) => {
   if (err) {
     console.error('Error connecting to database:', err);
-    process.exit(1); // Exit the process if unable to connect to the database
+    process.exit(1);  
   }
   console.log('Connected to database');
   sqlCommands.forEach((sql) => {
@@ -129,7 +129,6 @@ const sendSignUpConfirmationEmail = (email, residence) => {
   });
 };
 
-// New function to send deletion email
 const sendDeletionNotificationEmail = (email) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,

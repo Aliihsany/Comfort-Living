@@ -36,7 +36,6 @@ const Woningtoevoegen = () => {
     })
     .then(data => {
       toast.success('Woning succesvol toegevoegd!');
-      // Optionally clear the form
       setNaam('');
       setKamerindeling('');
       setHuurkosten('');

@@ -34,7 +34,7 @@ nav {
 .image-slider img {
   display: block;
   margin: auto;
-  width: 100%; /* Slightly larger than before */
+  width: 100%;
   height: auto;
   border-radius: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);

@@ -125,7 +125,6 @@ const Register = () => {
             }
         });
 
-        // Set rol value
         data.append('rol', formData.rol ? 'true' : 'false');
 
         try {
