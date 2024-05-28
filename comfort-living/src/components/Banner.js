@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './Banner.css';  
+import './css/Banner.css';  
 import axios from 'axios';
 
 const Banner = () => {

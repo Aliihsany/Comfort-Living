@@ -159,7 +159,7 @@ const Profile = () => {
     }
   };
 
-  const handleDelete = async (residenceId) => {
+  const handlepandDelete = async (residenceId) => {
     const confirmDelete = window.confirm('Are you sure you want to delete this signup?');
     if (!confirmDelete) {
       return;
@@ -233,7 +233,7 @@ const Profile = () => {
             </div>
           ))}
           <button type="submit">Update Profiel</button>
-          <button type="button" className="delete-button" onClick={handleDelete}>
+          <button type="button" className="delete-button" onClick={handlepandDelete}>
             Delete Profiel
           </button>
         </form>
