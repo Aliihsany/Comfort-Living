@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './WoningenBewerken.css';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 
 const WoningenBewerken = () => {
   const { id } = useParams();
+  
   const [woning, setWoning] = useState({
     energielabel: '',
     locatie: '',
@@ -36,6 +39,25 @@ const WoningenBewerken = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setWoning({ ...woning, [name]: value });
+  };
+
+  const handleFileChange = (e) => {
+    const { name } = e.target;
+    const file = e.target.files[0];
+    const validTypes = ['image/jpeg', 'image/png'];
+
+    if (file && validTypes.includes(file.type)) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setWoning((prevWoning) => ({
+          ...prevWoning,
+          [name]: reader.result
+        }));
+      };
+      reader.readAsDataURL(file);
+    } else {
+      toast.error('Alleen JPG en PNG bestanden zijn toegestaan.');
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -119,19 +141,19 @@ const WoningenBewerken = () => {
         </div>
         <div className="form-group">
           <label>Afbeelding 1:</label>
-          <input type="file" name="afbeelding_1" onChange={handleChange} />
+          <input type="file" name="afbeelding_1" onChange={handleFileChange} />
         </div>
         <div className="form-group">
           <label>Afbeelding 2:</label>
-          <input type="file" name="afbeelding_2" onChange={handleChange} />
+          <input type="file" name="afbeelding_2" onChange={handleFileChange} />
         </div>
         <div className="form-group">
           <label>Afbeelding 3:</label>
-          <input type="file" name="afbeelding_3" onChange={handleChange} />
+          <input type="file" name="afbeelding_3" onChange={handleFileChange} />
         </div>
-        
         <button type="submit" className="submit-button">Opslaan</button>
       </form>
+      <ToastContainer />
     </div>
   );
 };
