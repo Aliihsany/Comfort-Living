@@ -69,59 +69,80 @@ const Woningtoevoegen = () => {
 
   return (
     <div className="sidebar">
-        <Sidebar />
-
-    <div className="woningtoevoegen">
-      <h1>Voeg Woning toe</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Naam:
-          <input type="text" value={naam} onChange={(e) => setNaam(e.target.value)} required />
-        </label>
-        <label>
-          Kamerindeling:
-          <input type="text" value={kamerindeling} onChange={(e) => setKamerindeling(e.target.value)} required />
-        </label>
-        <label>
-          Huurkosten:
-          <input type="number" value={huurkosten} onChange={(e) => setHuurkosten(e.target.value)} required />
-        </label>
-        <label>
-          Servicekosten:
-          <input type="number" value={servicekosten} onChange={(e) => setServicekosten(e.target.value)} required />
-        </label>
-        <label>
-          Energielabel:
-          <input type="text" value={energielabel} onChange={(e) => setEnergielabel(e.target.value)} required />
-        </label>
-        <label>
-          Locatie:
-          <input type="text" value={locatie} onChange={(e) => setLocatie(e.target.value)} required />
-        </label>
-        <label>
-          Type:
-          <input type="text" value={type} onChange={(e) => setType(e.target.value)} required />
-        </label>
-        <label>
-          Straal:
-          <input type="text" value={straal} onChange={(e) => setStraal(e.target.value)} required />
-        </label>
-        <label>
-          Beschrijving:
-          <textarea value={beschrijving} onChange={(e) => setBeschrijving(e.target.value)} required />
-        </label>
-        <label>
-          Afbeeldingen:
-          <input type="file" multiple onChange={handleImageChange} accept=".jpg,.jpeg,.png" />
-        </label>
-        <div className="image-slider">
-          {Object.values(afbeeldingen).map((image, index) => (
-            <img key={index} src={image} alt={`Preview ${index + 1}`} style={{ width: '100px', height: '100px', objectFit: 'cover', margin: '5px' }} />
-          ))}
-        </div>
-        <button type="submit">Voeg woning toe</button>
-      </form>
-    </div>
+      <Sidebar />
+      <div className="woningtoevoegen">
+        <h1>Voeg Woning toe</h1>
+        <form onSubmit={handleSubmit}>
+          <label className="form-label">
+            Naam:
+            <input type="text" value={naam} onChange={(e) => setNaam(e.target.value)} required />
+          </label>
+          <label className="form-label">
+            Locatie:
+            <input type="text" value={locatie} onChange={(e) => setLocatie(e.target.value)} required />
+          </label>
+          <label className="form-label">
+            Huurkosten:
+            <input type="number" value={huurkosten} onChange={(e) => setHuurkosten(e.target.value)} required />
+          </label>
+          <label className="form-label">
+            Servicekosten:
+            <input type="number" value={servicekosten} onChange={(e) => setServicekosten(e.target.value)} required />
+          </label>
+          <label className="form-label">
+            Straal:
+            <input type="text" value={straal} onChange={(e) => setStraal(e.target.value)} required />
+          </label>
+          <label className="form-label">
+            Beschrijving:
+            <textarea value={beschrijving} onChange={(e) => setBeschrijving(e.target.value)} required />
+          </label>
+          <label className="form-label">
+            Afbeeldingen minimaal 3 fotos:
+            <input type="file" multiple onChange={handleImageChange} accept=".jpg,.jpeg,.png" />
+          </label>
+          <div className="image-slider">
+            {Object.values(afbeeldingen).map((image, index) => (
+              <img key={index} src={image} alt={`Preview ${index + 1}`} />
+            ))}
+          </div>
+          <label className="form-label">
+            Type:
+            <select value={type} onChange={(e) => setType(e.target.value)} required>
+              <option value="">Selecteer type</option>
+              <option value="Appartement">Appartement</option>
+              <option value="Eengezinswoning">Eengezinswoning</option>
+              <option value="Studio">Studio</option>
+              <option value="Villa">Villa</option>
+            </select>
+          </label>
+          <label className="form-label">
+            Kamerindeling:
+            <select value={kamerindeling} onChange={(e) => setKamerindeling(e.target.value)} required>
+              <option value="">Selecteer kamerindeling</option>
+              <option value="1 kamer">1 kamer</option>
+              <option value="2 kamers">2 kamers</option>
+              <option value="3 kamers">3 kamers</option>
+              <option value="4 kamers">4 kamers</option>
+              <option value="5+ kamers">5+ kamers</option>
+            </select>
+          </label>
+          <label className="form-label">
+            Energielabel:
+            <select value={energielabel} onChange={(e) => setEnergielabel(e.target.value)} required>
+              <option value="">Selecteer energielabel</option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+              <option value="D">D</option>
+              <option value="E">E</option>
+              <option value="F">F</option>
+              <option value="G">G</option>
+            </select>
+          </label>
+          <button type="submit">Voeg woning toe</button>
+        </form>
+      </div>
     </div>
   );
 };

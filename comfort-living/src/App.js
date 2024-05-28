@@ -14,6 +14,8 @@ import Woningdetail from './admin/Woningdetail';
 import Userpage from './admin/Userpage';
 import Blocked from './components/Blocked';
 import Profile from './components/Profile';
+import WoningenBewerken from './admin/WoningenBewerken';
+
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -43,6 +45,7 @@ function App() {
           <Route path="/woningen" element={<Woningen />} />
           <Route path="/userpage" element={<Userpage />} />
           <Route path="/profile" element={<Profile />} />
+          <Route exact path="/woningen/:id/bewerken" element={<WoningenBewerken />} />
         </Routes>
       </div>
     </Router>

@@ -465,6 +465,51 @@ app.delete('/users/:id', (req, res) => {
   });
 });
 
+app.delete('/panden/:id', (req, res) => {
+  const residenceId = req.params.id;
+  const query = 'DELETE FROM panden WHERE id = ?';
+
+  db.query(query, [residenceId], (err, result) => {
+    if (err) {
+      console.error('Error deleting residence:', err);
+      return res.status(500).json({ error: 'Error deleting residence' });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Residence not found' });
+    }
+
+    res.status(200).json({ message: 'Residence deleted successfully' });
+  });
+});
+
+// PUT endpoint for updating residence details
+app.put('/panden/:id', (req, res) => {
+  const residenceId = req.params.id;
+  const { naam, kamerindeling, huurkosten, servicekosten, energielabel, locatie, type, straal, beschrijving, afbeelding_1, afbeelding_2, afbeelding_3 } = req.body;
+
+  // Query to update residence details in the database
+  const query = 'UPDATE panden SET naam = ?, kamerindeling = ?, huurkosten = ?, servicekosten = ?, energielabel = ?, locatie = ?, type = ?, straal = ?, beschrijving = ?, afbeelding_1 = ?, afbeelding_2 = ?, afbeelding_3 = ? WHERE id = ?';
+  const values = [naam, kamerindeling, huurkosten, servicekosten, energielabel, locatie, type, straal, beschrijving, afbeelding_1, afbeelding_2, afbeelding_3, residenceId];
+
+  // Execute the query to update residence details
+  db.query(query, values, (err, result) => {
+    if (err) {
+      console.error('Error updating residence details:', err);
+      res.status(500).json({ error: 'Error updating residence details' });
+      return;
+    }
+
+    if (result.affectedRows === 0) {
+      res.status(404).json({ error: 'Residence not found' });
+      return;
+    }
+
+    res.status(200).json({ message: 'Residence details updated successfully' });
+  });
+});
+
+
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
