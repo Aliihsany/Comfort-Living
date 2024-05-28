@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Housefilter.css';
+import './css/Housefilter.css';
 
 const Housefilter = ({ onFilterChange }) => {
   const [filter, setFilter] = useState({

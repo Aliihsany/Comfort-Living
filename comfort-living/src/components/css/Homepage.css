@@ -59,14 +59,13 @@
     border-radius: 5px;
   }
 
-/* Carousel styling */
 .carousel-root {
   position: relative;
-  width: 100%; /* Volledige breedte van het scherm */
-  height: 400px; /* Verklein de hoogte van de carousel-container */
+  width: 100%; 
+  height: 400px; 
   overflow: hidden;
-  padding: 20px 0; /* Optioneel: voeg padding toe rond de carousel-container */
-  box-sizing: border-box; /* Inclusief padding in de hoogte/breedte berekeningen */
+  padding: 20px 0; 
+  box-sizing: border-box; 
 }
 
 .carousel .slide {
@@ -76,9 +75,9 @@
 }
 
 .carousel img {
-  width: 100%; /* De afbeelding neemt de volledige breedte van de slide in */
-  height: 100%; /* De afbeelding neemt de volledige hoogte van de slide in */
-  object-fit: cover; /* Behoudt de verhouding van de afbeelding en vult de container */
-  border-radius: 10px; /* Optioneel: voegt afgeronde hoeken toe aan de afbeeldingen */
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+  border-radius: 10px; 
 }
 

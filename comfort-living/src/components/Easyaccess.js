@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './Easyaccess.css';
+import './css/Easyaccess.css';
 
 const Easyaccess = () => {
   return (

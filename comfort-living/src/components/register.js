@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import './Register.css'; 
+import './css/Register.css'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope, faLock, faHome, faPhone, faMoneyBill, faGlobe, faRuler, faFilePdf, faCamera, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -199,7 +199,9 @@ const Register = () => {
                     <div className="flex-item">
                         <label>Geboortedatum</label>
                         <div className="input-icon">
-                            <FontAwesomeIcon icon={faCalendarAlt} style={{ zIndex: 999 }}/>
+                            {!showTerms && (
+                                <FontAwesomeIcon icon={faCalendarAlt} style={{ zIndex: 900 }} />
+                            )}
                             <DatePicker
                                 selected={formData.geboortedatum}
                                 onChange={handleDateChange}
@@ -332,9 +334,15 @@ const Register = () => {
                 <div className="modal">
                     <div className="modal-content">
                         <span className="close" onClick={toggleTermsModal}>&times;</span>
-                        <h2>Algemene Voorwaarden</h2>
-                        <p>Een accounthouder kan zelf zijn account, profiel en persoonlijke gegevens verwijderen nadat het huurcontract is gestopt. Andere gegevens, zoals transactie- en huurgegevens, moeten echter worden bewaard, zelfs als de persoonlijke gegevens zijn verwijderd.</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla convallis egestas rhoncus. Donec facilisis fermentum sem, ac viverra ante luctus vel. Donec vel mauris quam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla convallis egestas rhoncus. Donec facilisis fermentum sem, ac viverra ante luctus vel. Donec vel mauris quam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla convallis egestas rhoncus. Donec facilisis fermentum sem, ac viverra ante luctus vel. Donec vel mauris quam.</p>
+                        <h2>Gebruiksvoorwaarden:</h2>
+                        <p><strong>Accountgegevens:</strong> Je bent verantwoordelijk voor het veilig houden van je accountgegevens en het gebruik van onze diensten op een legitieme manier.</p>
+                        <p><strong>Toegestane doeleinden:</strong> Onze diensten zijn bedoeld voor persoonlijk en legaal gebruik. Het is niet toegestaan om onze diensten te misbruiken voor illegale activiteiten of schadelijke doeleinden.</p>
+                        <p><strong>Intellectuele eigendom:</strong> Alle inhoud en materialen op onze platformen zijn eigendom van [Bedrijfsnaam] of zijn licentiegevers en zijn beschermd door auteursrecht en andere intellectuele eigendomsrechten.</p>
+                        <br></br>
+                        <h2>Privacybeleid:</h2>
+                        <p><strong>Persoonlijke informatie:</strong> We verzamelen alleen persoonlijke informatie die nodig is om onze diensten te leveren en te verbeteren. Deze informatie wordt vertrouwelijk behandeld en niet gedeeld met derden zonder jouw toestemming.</p>
+                        <p><strong>Gegevensbeveiliging:</strong> We nemen de nodige maatregelen om jouw persoonlijke gegevens te beschermen tegen verlies, misbruik en ongeoorloofde toegang.</p>
+                        <p><strong>Cookies:</strong> We gebruiken cookies om de functionaliteit van onze website te verbeteren en gepersonaliseerde inhoud aan te bieden. Je kunt ervoor kiezen om cookies uit te schakelen in je browserinstellingen.</p>
                         <button type="button" onClick={toggleTermsModal}>Sluit</button>
                     </div>
                 </div>

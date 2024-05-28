@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Woningtoevoegen from './Woningtoevoegen';
 import Userpage from './Userpage';
-import './Adminpage.css';
+import './css/Adminpage.css';
 
 const Adminpage = () => {
   return (

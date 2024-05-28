@@ -85,7 +85,6 @@ nav ul li:hover .dropdown {
 .dropdown li a:hover {
   background-color: #f1f1f1;
   color: black;
-  position: relative;
   top: -100px;
 }
 

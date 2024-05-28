@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Woningen.css';
+import './css/Woningen.css';
 import Sidebar from './Sidebar';
 import { Link } from 'react-router-dom';
 

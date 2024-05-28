@@ -3,7 +3,7 @@ import Banner from './Banner';
 import Easyaccess from './Easyaccess';
 import Housefilter from './Housefilter';
 import axios from 'axios';
-import './Homepage.css';
+import './css/Homepage.css';
 import Slider from "react-slick";
 import Searchbar from './Searchbar';
 import Footer from './Footer';
@@ -99,8 +99,8 @@ function Homepage() {
           {filteredPanden.map(pand => (
             
             <div key={pand.id} className="house-item" onClick={() => handleHouseClick(pand.id)}>
-              <p>Naam: {pand.naam}</p>
-              <img src={pand.afbeelding_1} alt={`House ${pand.id}`} />
+              <p>{pand.naam}</p>
+              <img src={pand.afbeelding_1} alt={`House ${pand.id}`} /><br></br><br></br>
               <p>Kamers: {pand.kamerindeling}</p>
               <p>Huurkosten: €{pand.huurkosten}</p>
               <p>Servicekosten: €{pand.servicekosten}</p>

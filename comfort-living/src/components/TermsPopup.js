@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import './TermsPopup.css';
+import './css/TermsPopup.css';
 
 const TermsPopup = ({ onClose, onAccept }) => {
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);

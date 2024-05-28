@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './Searchbar.css';
+import './css/Searchbar.css';
 import { useNavigate } from 'react-router-dom';
 
 const Searchbar = () => {
@@ -12,7 +12,7 @@ const Searchbar = () => {
     if (searchTerm) {
       fetchPanden();
     } else {
-      setPanden([]); // Clear the results when search term is empty
+      setPanden([]); 
     }
   }, [searchTerm]);
 

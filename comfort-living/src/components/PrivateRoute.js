@@ -3,9 +3,9 @@ import { Navigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 
-const PrivateRoute = ({ children }) => {
+const PrivateRoute = ({ children, requiredRole }) => {
   const token = localStorage.getItem('token');
-  const [userStatus, setUserStatus] = useState({ isVerified: null, isBlocked: null });
+  const [userStatus, setUserStatus] = useState({ isVerified: null, isBlocked: null, role: null });
 
   useEffect(() => {
     if (token) {
@@ -17,7 +17,7 @@ const PrivateRoute = ({ children }) => {
         if (decodedToken.exp < currentTime) {
           console.log('Token expired');
           localStorage.removeItem('token');
-          setUserStatus({ isVerified: false, isBlocked: false });
+          setUserStatus({ isVerified: false, isBlocked: false, role: null });
         } else {
           axios.get('http://localhost:3001/check-verification', {
             headers: {
@@ -28,24 +28,25 @@ const PrivateRoute = ({ children }) => {
             setUserStatus({
               isVerified: response.data.isVerified,
               isBlocked: response.data.isBlocked,
+              role: decodedToken.role 
             });
           })
           .catch(error => {
             console.error('Error during verification check:', error);
-            setUserStatus({ isVerified: false, isBlocked: false });
+            setUserStatus({ isVerified: false, isBlocked: false, role: null });
           });
         }
       } catch (error) {
         console.error('Invalid token:', error);
         localStorage.removeItem('token');
-        setUserStatus({ isVerified: false, isBlocked: false });
+        setUserStatus({ isVerified: false, isBlocked: false, role: null });
       }
     } else {
-      setUserStatus({ isVerified: false, isBlocked: false });
+      setUserStatus({ isVerified: false, isBlocked: false, role: null });
     }
   }, [token]);
 
-  if (userStatus.isVerified === null || userStatus.isBlocked === null) {
+  if (userStatus.isVerified === null || userStatus.isBlocked === null || userStatus.role === null) {
     return <div>Loading...</div>;
   }
 
@@ -59,6 +60,11 @@ const PrivateRoute = ({ children }) => {
 
   if (!userStatus.isVerified) {
     return <Navigate to="/verify-email" />;
+  }
+
+  if (requiredRole && userStatus.role !== requiredRole) {
+    console.log('User role does not match required role:', userStatus.role); // Debug line
+    return <Navigate to="/unauthorized" />;
   }
 
   return children;

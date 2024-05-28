@@ -1,5 +1,5 @@
 import React from 'react';
-import './Userdetail.css';
+import './css/Userdetail.css';
 
 const UserDetailsModal = ({ user, onClose }) => {
   if (!user) return null;

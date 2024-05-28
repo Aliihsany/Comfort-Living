@@ -1,0 +1,50 @@
+.compare-page {
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+  }
+  
+  .compare-page h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 36px;
+  }
+  
+  .compare-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  .residence-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .residence-card h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .residence-card p {
+    font-size: 16px;
+    margin: 5px 0;
+  }
+  
+  .residence-card p strong {
+    font-weight: bold;
+  }
+  
+  .residence-card:nth-child(odd) {
+    background-color: #eef;
+  }
+  
+  .residence-card:nth-child(even) {
+    background-color: #efe;
+  }
+  

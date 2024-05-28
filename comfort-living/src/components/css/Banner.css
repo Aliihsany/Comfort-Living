@@ -1,5 +1,5 @@
 .banner {
-  background-image: url('../assets/huisje.png');
+  background-image: url('./huisje.png');
   background-attachment: local;
   background-size: cover;
   background-position: center;
@@ -19,7 +19,6 @@ h1 {
   text-align: center;
 }
 
-/* Media query for smaller screens */
 @media (max-width: 768px) {
   .banner {
     height: 30vh;
@@ -30,7 +29,6 @@ h1 {
   }
 }
 
-/* Media query for very small screens */
 @media (max-width: 480px) {
   .banner {
     height: 25vh;

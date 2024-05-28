@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import './Woninginfo.css';
+import { useParams, useNavigate } from 'react-router-dom';
+import './css/Woninginfo.css';
 import Slider from 'react-slick';
-import Header from './Header'; // Import Header component
-import Footer from './Footer'; // Import Footer component
+import Header from './Header';
+import Footer from './Footer';
 
 const Woninginfo = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [residence, setResidence] = useState(null);
 
   useEffect(() => {
@@ -23,12 +24,63 @@ const Woninginfo = () => {
     }
   };
 
+  const handleSignUp = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('You need to be logged in to sign up for a residence.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3001/signup-residence`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ residenceId: id })
+      });
+      if (response.ok) {
+        alert('Successfully signed up for the residence! Check your email for confirmation.');
+      } else {
+        alert('Failed to sign up for the residence.');
+      }
+    } catch (error) {
+      console.error('Error signing up for the residence:', error);
+    }
+  };
+
+  const handleCompare = () => {
+    navigate(`/compare/${id}`);
+  };
+
   const sliderSettings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    fade: true,
+    arrows: false,
+    autoplay: true,
+    autoplaySpeed: 2500,
+    appendDots: dots => (
+      <div style={{ position: 'absolute', bottom: '10px', width: '100%' }}>
+        <ul style={{ margin: '0px', padding: '0px' }}> {dots} </ul>
+      </div>
+    ),
+    customPaging: i => (
+      <div
+        style={{
+          width: '10px',
+          height: '10px',
+          backgroundColor: '#d9d9d9',
+          borderRadius: '50%',
+          display: 'inline-block',
+          margin: '0 5px'
+        }}
+      ></div>
+    )
   };
 
   if (!residence) {
@@ -37,7 +89,7 @@ const Woninginfo = () => {
 
   return (
     <div>
-      <Header /> {/* Add Header component */}
+      <Header /> 
       <div className="woninginfo-page">
         <nav>
           <a href="/">Home</a> &gt; <a href="/aanbod">Aanbod</a> &gt; <span>{residence.naam}</span>
@@ -85,6 +137,8 @@ const Woninginfo = () => {
                 </tbody>
               </table>
             </div>
+            <button className="signup-button" onClick={handleSignUp}>Inschrijven</button>
+            <button className="compare-button" onClick={handleCompare}>Vergelijken</button>
           </div>
           <div className="residence-right">
             <h2>Beschrijving</h2>
@@ -92,7 +146,7 @@ const Woninginfo = () => {
           </div>
         </div>
       </div>
-      <Footer /> {/* Add Footer component */}
+      <Footer />
     </div>
   );
 };

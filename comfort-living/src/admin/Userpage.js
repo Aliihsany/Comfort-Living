@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './Userpage.css';
+import './css/Userpage.css';
 import UserDetailsModal from './Userdetail';
 import Sidebar from './Sidebar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 
 const Userpage = () => {
   const [users, setUsers] = useState([]);
@@ -15,7 +17,11 @@ const Userpage = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/users');
+      const response = await axios.get('http://localhost:3001/users', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       setUsers(response.data);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -24,26 +30,62 @@ const Userpage = () => {
 
   const handleBlockUser = async (id) => {
     try {
-      const response = await axios.put('http://localhost:3001/block-user', { id });
-      console.log(response.data); // Log the response to check the success message
-      fetchUsers(); // Refresh the list after blocking
+      const response = await axios.put('http://localhost:3001/block-user', { id }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      console.log(response.data); 
+      fetchUsers();
     } catch (error) {
       console.error('Error blocking user:', error.response ? error.response.data : error.message);
     }
   };
 
+  const handleUnblockUser = async (id) => {
+    try {
+      const response = await axios.put('http://localhost:3001/unblock-user', { id }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      console.log(response.data);
+      fetchUsers(); 
+    } catch (error) {
+      console.error('Error unblocking user:', error.response ? error.response.data : error.message);
+    }
+  };
+
   const handleDeleteUser = async (id) => {
-    // Vraag om bevestiging
     const confirmDelete = window.confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?');
 
     if (confirmDelete) {
       try {
-        const response = await axios.delete(`http://localhost:3001/users/${id}`);
-        console.log(response.data); // Log the response to check the success message
-        fetchUsers(); // Refresh the list after deletion
+        const response = await axios.delete(`http://localhost:3001/users/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        console.log(response.data);
+        fetchUsers(); 
       } catch (error) {
         console.error('Error deleting user:', error.response ? error.response.data : error.message);
       }
+    }
+  };
+
+  const handleChangeRole = async (id, currentRole) => {
+    const newRole = currentRole === 'admin' ? 'user' : 'admin';
+    try {
+      const response = await axios.put('http://localhost:3001/change-role', { id, newRole }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      console.log(response.data); 
+      fetchUsers(); 
+    } catch (error) {
+      console.error('Error changing user role:', error.response ? error.response.data : error.message);
     }
   };
 
@@ -65,30 +107,38 @@ const Userpage = () => {
         <table>
           <thead>
             <tr>
-              <th>Info</th>
+              <th><FontAwesomeIcon icon={faCircleInfo} /></th>
               <th>Voornaam</th>
               <th>Achternaam</th>
               <th>Email</th>
-              <th>Geblokkeerd</th> {/* Nieuwe kolom voor geblokkeerde status */}
+              <th>Geblokkeerd</th>
+              <th>Rol</th>
               <th>Acties</th>
+              <th>Rol</th>
               <th>Verwijderen</th> 
             </tr>
           </thead>
           <tbody>
             {filteredUsers.map(user => (
               <tr key={user.id} style={{ backgroundColor: user.blocked ? '#f8d7da' : 'transparent' }}>
-                <td onClick={() => setSelectedUser(user)} style={{ cursor: 'pointer', textDecoration: 'underline' }}>Info</td>
+                <td onClick={() => setSelectedUser(user)} style={{ cursor: 'pointer', textDecoration: 'underline' }}><FontAwesomeIcon icon={faCircleInfo} style={{ color: 'Blue' }} /></td>
                 <td>{user.voornaam}</td>
                 <td>{user.achternaam}</td>
                 <td>{user.email}</td>
-                <td>{user.blocked ? 'Ja' : 'Nee'}</td> {/* Geblokkeerde status weergeven */}
+                <td>{user.blocked ? 'Ja' : 'Nee'}</td>
+                <td>{user.rol}</td>
                 <td>
-                  <button onClick={() => handleBlockUser(user.id)} disabled={user.blocked}>
-                    {user.blocked ? 'Geblokkeerd' : 'Blokkeer'}
+                  <button onClick={() => user.blocked ? handleUnblockUser(user.id) : handleBlockUser(user.id)}>
+                    {user.blocked ? 'Deblokkeer' : 'Blokkeer'}
                   </button>
                 </td>
                 <td>
-                  <button onClick={() => handleDeleteUser(user.deleted)}>
+                  <button onClick={() => handleChangeRole(user.id, user.rol)}>
+                    {user.rol === 'admin' ? 'Demote to User' : 'Promote to Admin'}
+                  </button>
+                </td>
+                <td>
+                  <button onClick={() => handleDeleteUser(user.id)}>
                     Verwijderen
                   </button>
                 </td>

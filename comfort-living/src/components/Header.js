@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Header.css';
-import logo from '../assets/logo.png'; // Import the logo image
+import './css/Header.css';
+import logo from '../assets/logo.png'; 
 
 const Header = () => {
   const [dropdown, setDropdown] = useState(null);
@@ -39,7 +39,7 @@ const Header = () => {
   return (
     <header>
       <div className="logo">
-        <img src={logo} alt="Logo" />
+        <a href='/'><img src={logo} alt="Logo" /></a>
       </div>
       <button className="menu-toggle" onClick={toggleMenu}>
         ☰
@@ -78,7 +78,7 @@ const Header = () => {
             )}
           </li>
           <li><a href="#">Organisatie</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="/over">Contact</a></li>
           {isLoggedIn ? (
             <>
               <li>

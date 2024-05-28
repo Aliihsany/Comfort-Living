@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import './Houselist.css';
+import './css/Houselist.css';
 
 const Houselist = () => {
   const [houses, setHouses] = useState([]);

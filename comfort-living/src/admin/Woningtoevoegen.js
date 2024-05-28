@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import './Woningtoevoegen.css';
+import './css/Woningtoevoegen.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 import Sidebar from './Sidebar';
 
 const Woningtoevoegen = () => {
@@ -32,7 +35,7 @@ const Woningtoevoegen = () => {
       return response.json();
     })
     .then(data => {
-      console.log('Success:', data);
+      toast.success('Woning succesvol toegevoegd!');
       // Optionally clear the form
       setNaam('');
       setKamerindeling('');
@@ -46,7 +49,7 @@ const Woningtoevoegen = () => {
       setAfbeeldingen({});
     })
     .catch((error) => {
-      console.error('Error:', error);
+      toast.error(`Fout bij het toevoegen van woning: ${error.message}`);
     });
   };
 
@@ -62,16 +65,18 @@ const Woningtoevoegen = () => {
         };
         reader.readAsDataURL(file);
       } else {
-        alert('Only JPG and PNG files are allowed.');
+        toast.error('Alleen JPG en PNG bestanden zijn toegestaan.');
       }
     });
   };
 
   return (
+    <div><ToastContainer />
     <div className="sidebar">
         <Sidebar />
 
     <div className="woningtoevoegen">
+      
       <h1>Voeg Woning toe</h1>
       <form onSubmit={handleSubmit}>
         <label>
@@ -80,7 +85,14 @@ const Woningtoevoegen = () => {
         </label>
         <label>
           Kamerindeling:
-          <input type="text" value={kamerindeling} onChange={(e) => setKamerindeling(e.target.value)} required />
+          <select value={kamerindeling} onChange={(e) => setKamerindeling(e.target.value)} required>
+            <option value="">Selecteer kamerindeling</option>
+            <option value="1 kamer">1 kamer</option>
+            <option value="2 kamers">2 kamers</option>
+            <option value="3 kamers">3 kamers</option>
+            <option value="4 kamers">4 kamers</option>
+            <option value="5+ kamers">5+ kamers</option>
+          </select>
         </label>
         <label>
           Huurkosten:
@@ -92,7 +104,16 @@ const Woningtoevoegen = () => {
         </label>
         <label>
           Energielabel:
-          <input type="text" value={energielabel} onChange={(e) => setEnergielabel(e.target.value)} required />
+          <select value={energielabel} onChange={(e) => setEnergielabel(e.target.value)} required>
+            <option value="">Selecteer energielabel</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+            <option value="E">E</option>
+            <option value="F">F</option>
+            <option value="G">G</option>
+          </select>
         </label>
         <label>
           Locatie:
@@ -100,7 +121,13 @@ const Woningtoevoegen = () => {
         </label>
         <label>
           Type:
-          <input type="text" value={type} onChange={(e) => setType(e.target.value)} required />
+          <select value={type} onChange={(e) => setType(e.target.value)} required>
+            <option value="">Selecteer type</option>
+            <option value="Appartement">Appartement</option>
+            <option value="Eengezinswoning">Eengezinswoning</option>
+            <option value="Studio">Studio</option>
+            <option value="Villa">Villa</option>
+          </select>
         </label>
         <label>
           Straal:
@@ -108,7 +135,13 @@ const Woningtoevoegen = () => {
         </label>
         <label>
           Beschrijving:
-          <textarea value={beschrijving} onChange={(e) => setBeschrijving(e.target.value)} required />
+          <textarea 
+            value={beschrijving} 
+            onChange={(e) => setBeschrijving(e.target.value)} 
+            maxLength="1000"
+            required 
+          />
+          <small className="text-muted float-right">{beschrijving.length}/1000</small>
         </label>
         <label>
           Afbeeldingen:
@@ -121,6 +154,7 @@ const Woningtoevoegen = () => {
         </div>
         <button type="submit">Voeg woning toe</button>
       </form>
+    </div>
     </div>
     </div>
   );

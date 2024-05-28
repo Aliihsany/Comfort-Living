@@ -8,7 +8,6 @@ const multer = require('multer');
 const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-const path = require('path');
 
 const port = 3001;
 
@@ -56,6 +55,96 @@ db.connect((err) => {
     });
   });
 });
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
+
+const sendBlockNotificationEmail = (email) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Account Blocked Notification',
+    text: 'Uw account is geblokkeerd. Neem contact op met de ondersteuning voor meer details.'
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return console.error('Error sending email:', error);
+    }
+    console.log('Block notification email sent:', info.response);
+  });
+};
+
+const sendUnblockNotificationEmail = (email) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Account Unblocked Notification',
+    text: 'Uw account is gedeblokkeerd. U kunt nu inloggen en gebruik maken van het platform.'
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return console.error('Error sending email:', error);
+    }
+    console.log('Unblock notification email sent:', info.response);
+  });
+};
+
+const sendVerificationEmail = (email, token) => {
+  const verificationLink = `http://localhost:3001/verify-email?token=${token}`;
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Email Verification',
+    text: `Klik alstublieft op de volgende link om uw e-mail te verifiëren: ${verificationLink}`
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return console.error('Error sending email:', error);
+    }
+    console.log('Verification email sent:', info.response);
+  });
+};
+
+const sendSignUpConfirmationEmail = (email, residence) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Inschrijving Bevestiging',
+    text: `Je hebt je succesvol ingeschreven voor het pand: ${residence.naam}.\n\nLocatie: ${residence.locatie}\nHuurkosten: €${residence.huurkosten}\nServicekosten: €${residence.servicekosten}\nEnergielabel: ${residence.energielabel}\n\nBedankt voor je inschrijving!`
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return console.error('Error sending email:', error);
+    }
+    console.log('Sign-up confirmation email sent:', info.response);
+  });
+};
+
+// New function to send deletion email
+const sendDeletionNotificationEmail = (email) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Account Verwijderd',
+    text: 'Uw account is verwijderd. Als u vragen heeft, neem dan contact op met de ondersteuning.'
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return console.error('Error sending email:', error);
+    }
+    console.log('Deletion notification email sent:', info.response);
+  });
+};
 
 const verifyToken = (req, res, next) => {
   const token = req.headers['authorization'];
@@ -119,7 +208,7 @@ app.post('/login', (req, res) => {
 
     try {
       if (await argon2.verify(user.password, password)) {
-        const token = jwt.sign({ id: user.id }, 'Comfort-Living', { expiresIn: '1h' });
+        const token = jwt.sign({ id: user.id, role: user.rol }, 'Comfort-Living', { expiresIn: '1h' });
         res.status(200).json({ token });
       } else {
         res.status(401).send('Incorrect password');
@@ -130,67 +219,6 @@ app.post('/login', (req, res) => {
     }
   });
 });
-
-app.get('/check-verification', verifyToken, (req, res) => {
-  const sql = 'SELECT is_verified, blocked FROM users WHERE id = ?';
-  db.query(sql, [req.user.id], (err, results) => {
-    if (err) {
-      return res.status(500).send('Error checking verification status');
-    }
-    if (results.length > 0) {
-      res.status(200).json({ isVerified: results[0].is_verified, isBlocked: results[0].blocked });
-    } else {
-      res.status(404).send('User not found');
-    }
-  });
-});
-
-
-app.get('/protected', verifyToken, (req, res) => {
-  res.status(200).send('This is a protected route');
-});
-
-const validateEmail = (email) => {
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return re.test(String(email).toLowerCase());
-};
-
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
-
-const sendVerificationEmail = (email, token) => {
-  const verificationLink = `http://localhost:${port}/verify-email?token=${token}`;
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: email,
-    subject: 'Email Verification',
-    html: `
-      <div style="text-align: center; font-family: Arial, sans-serif; color: #333;">
-        <img src="cid:unique@logo.png" alt="logo" width="150" height="150" style="margin-bottom: 20px;" />
-        <p style="font-size: 18px; margin-bottom: 20px;">Click the link below to verify your email:</p>
-        <a href="${verificationLink}" style="display: inline-block; padding: 10px 20px; font-size: 18px; color: #fff; background-color: #007BFF; text-decoration: none; border-radius: 5px; margin-bottom: 20px;">Verify Email</a>
-        <p style="font-size: 14px; color: #666;">The link is valid for 15 minutes.</p>
-      </div>
-    `,
-    attachments: [{
-      filename: 'logo.png',
-      path: path.join(__dirname, 'comfort-living/src/assets/logo.png'),
-      cid: 'unique@logo.png' 
-    }]
-  };
-
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      return console.error('Error sending email:', error);
-    }
-    console.log('Verification email sent:', info.response);
-  });
-};
 
 app.post('/resend-verification', (req, res) => {
   const { email } = req.body;
@@ -277,7 +305,6 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
           console.error('Error inserting user:', err);
           res.status(500).send('Error registering user');
         } else {
-          // Insert into gegevens table
           const gegevensQuery = `INSERT INTO gegevens (voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, password, verification_token, is_verified, rol) 
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
           db.query(gegevensQuery, [voornaam, achternaam, geslacht, geboortedatum, woonadres, telefoonnummer, jaarinkomen, pdf, bewijsfoto, voorkeur, straal, email, hashedPassword, verificationToken, false, 'default_role'], (err, result) => {
@@ -297,7 +324,6 @@ app.post('/register', upload.fields([{ name: 'pdf' }, { name: 'bewijsfoto' }]), 
     }
   });
 });
-
 
 app.get('/verify-email', (req, res) => {
   const { token } = req.query;
@@ -383,7 +409,7 @@ app.get('/panden/:id', (req, res) => {
   });
 });
 
-app.put('/block-user', (req, res) => {
+app.put('/block-user', verifyToken, (req, res) => {
   const { id } = req.body;
 
   if (!id) {
@@ -401,10 +427,81 @@ app.put('/block-user', (req, res) => {
       return res.status(404).send('User not found');
     }
 
-    res.status(200).send('User blocked successfully');
+    const emailQuery = 'SELECT email FROM users WHERE id = ?';
+    db.query(emailQuery, [id], (err, results) => {
+      if (err) {
+        console.error('Error fetching user email:', err);
+        return res.status(500).send('Error blocking user');
+      }
+
+      if (results.length === 0) {
+        return res.status(404).send('User not found');
+      }
+
+      const email = results[0].email;
+      sendBlockNotificationEmail(email);
+      res.status(200).send('User blocked successfully');
+    });
   });
 });
 
+app.put('/unblock-user', verifyToken, (req, res) => {
+  const { id } = req.body;
+
+  if (!id) {
+    return res.status(400).send('User ID is required');
+  }
+
+  const query = 'UPDATE users SET blocked = 0 WHERE id = ?';
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error('Error unblocking user:', err);
+      return res.status(500).send('Error unblocking user');
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).send('User not found');
+    }
+
+    const emailQuery = 'SELECT email FROM users WHERE id = ?';
+    db.query(emailQuery, [id], (err, results) => {
+      if (err) {
+        console.error('Error fetching user email:', err);
+        return res.status(500).send('Error unblocking user');
+      }
+
+      if (results.length === 0) {
+        return res.status(404).send('User not found');
+      }
+
+      const email = results[0].email;
+      sendUnblockNotificationEmail(email);
+      res.status(200).send('User unblocked successfully');
+    });
+  });
+});
+
+app.put('/change-role', verifyToken, (req, res) => {
+  const { id, newRole } = req.body;
+
+  if (!id || !newRole) {
+    return res.status(400).send('User ID and new role are required');
+  }
+
+  const query = 'UPDATE users SET rol = ? WHERE id = ?';
+  db.query(query, [newRole, id], (err, result) => {
+    if (err) {
+      console.error('Error changing user role:', err);
+      return res.status(500).send('Error changing user role');
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).send('User not found');
+    }
+
+    res.status(200).send('User role changed successfully');
+  });
+});
 
 app.get('/panden', (req, res) => {
   const { naam } = req.query;
@@ -463,9 +560,160 @@ app.put('/users/me', verifyToken, (req, res) => {
   });
 });
 
+app.post('/signup-residence', verifyToken, (req, res) => {
+  const userId = req.user.id;
+  const { residenceId } = req.body;
+
+  const sqlInsert = 'INSERT INTO user_residences (user_id, residence_id) VALUES (?, ?)';
+  const sqlSelect = 'SELECT * FROM panden WHERE id = ?';
+  const sqlUser = 'SELECT email FROM users WHERE id = ?';
+
+  db.query(sqlInsert, [userId, residenceId], (err, result) => {
+    if (err) {
+      console.error('Error signing up for residence:', err);
+      res.status(500).send('Error signing up for residence');
+      return;
+    }
+
+    db.query(sqlSelect, [residenceId], (err, residenceResult) => {
+      if (err) {
+        console.error('Error fetching residence details:', err);
+        res.status(500).send('Error fetching residence details');
+        return;
+      }
+
+      if (residenceResult.length === 0) {
+        res.status(404).send('Residence not found');
+        return;
+      }
+
+      const residence = residenceResult[0];
+
+      db.query(sqlUser, [userId], (err, userResult) => {
+        if (err) {
+          console.error('Error fetching user email:', err);
+          res.status(500).send('Error fetching user email');
+          return;
+        }
+
+        if (userResult.length === 0) {
+          res.status(404).send('User not found');
+          return;
+        }
+
+        const userEmail = userResult[0].email;
+
+        sendSignUpConfirmationEmail(userEmail, residence);
+
+        res.status(200).send('Successfully signed up for the residence');
+      });
+    });
+  });
+});
+
+app.get('/compare/:id', (req, res) => {
+  const { id } = req.params;
+
+  const mainResidenceQuery = 'SELECT * FROM panden WHERE id = ?';
+  
+  db.query(mainResidenceQuery, [id], (err, mainResidenceResults) => {
+    if (err) {
+      console.error('Error fetching main residence:', err);
+      res.status(500).send('Error fetching main residence');
+      return;
+    }
+
+    if (mainResidenceResults.length === 0) {
+      res.status(404).send('Residence not found');
+      return;
+    }
+
+    const additionalResidencesQuery = 'SELECT * FROM panden WHERE id != ? LIMIT 3';
+    
+    db.query(additionalResidencesQuery, [id], (err, additionalResidencesResults) => {
+      if (err) {
+        console.error('Error fetching additional residences:', err);
+        res.status(500).send('Error fetching additional residences');
+        return;
+      }
+
+      const results = [...mainResidenceResults, ...additionalResidencesResults];
+      res.json(results);
+    });
+  });
+});
+
+app.delete('/signup-residence', verifyToken, (req, res) => {
+  const userId = req.user.id;
+  const { residenceId } = req.body;
+
+  const sql = 'DELETE FROM user_residences WHERE user_id = ? AND residence_id = ?';
+  
+  db.query(sql, [userId, residenceId], (err, result) => {
+    if (err) {
+      console.error('Error deleting residence signup:', err);
+      res.status(500).send('Error deleting residence signup');
+      return;
+    }
+
+    if (result.affectedRows === 0) {
+      res.status(404).send('Signup not found');
+      return;
+    }
+
+    res.status(200).send('Successfully deleted residence signup');
+  });
+});
+
+app.delete('/users/:id', verifyToken, (req, res) => {
+  const { id } = req.params;
+  
+  const emailQuery = 'SELECT email FROM users WHERE id = ?';
+  const deleteQuery = 'DELETE FROM users WHERE id = ?';
+
+  db.query(emailQuery, [id], (err, results) => {
+    if (err) {
+      console.error('Error fetching user email:', err);
+      return res.status(500).send('Error deleting user');
+    }
+
+    if (results.length === 0) {
+      return res.status(404).send('User not found');
+    }
+
+    const email = results[0].email;
+
+    db.query(deleteQuery, [id], (err, result) => {
+      if (err) {
+        console.error('Error deleting user:', err);
+        return res.status(500).send('Error deleting user');
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).send('User not found');
+      }
+
+      sendDeletionNotificationEmail(email);
+      res.status(200).send('User deleted successfully');
+    });
+  });
+});
+
+app.get('/users/me/residences', verifyToken, (req, res) => {
+  const userId = req.user.id;
+  const sql = 'SELECT r.id, r.naam, r.beschrijving, r.locatie, r.huurkosten, r.servicekosten, r.energielabel FROM user_residences ur JOIN panden r ON ur.residence_id = r.id WHERE ur.user_id = ?';
+
+  db.query(sql, [userId], (err, results) => {
+    if (err) {
+      console.error('Error fetching residences:', err);
+      res.status(500).send('Server error');
+      return;
+    }
+
+    res.json(results);
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-
-

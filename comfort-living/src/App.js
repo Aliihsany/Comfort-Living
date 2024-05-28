@@ -14,6 +14,9 @@ import Woningdetail from './admin/Woningdetail';
 import Userpage from './admin/Userpage';
 import Blocked from './components/Blocked';
 import Profile from './components/Profile';
+import Over from './components/Overons';
+import Compare from './components/Compare';
+import Unauthorized from './components/Unauthorized';
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -27,6 +30,7 @@ function App() {
           <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/blocked" element={<Blocked />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
           <Route 
             path="/" 
             element={
@@ -36,13 +40,51 @@ function App() {
             } 
           />
           <Route path="/" element={<Homepage />} />
-          <Route path="/admin" element={<AdminPage />} />
-          <Route path="/woningtoevoegen" element={<WoningToevoegen />} />
+          <Route 
+            path="/admin" 
+            element={
+              <PrivateRoute requiredRole="admin">
+                <AdminPage />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/woningtoevoegen" 
+            element={
+              <PrivateRoute requiredRole="admin">
+                <WoningToevoegen />
+              </PrivateRoute>
+            } 
+          />
           <Route path="/woning/:id" element={<Woninginfo />} /> 
-          <Route path="/woningdetail" element={<Woningdetail />} />
-          <Route path="/woningen" element={<Woningen />} />
-          <Route path="/userpage" element={<Userpage />} />
+          <Route 
+            path="/woningdetail/:id" 
+            element={
+              <PrivateRoute requiredRole="admin">
+                <Woningdetail />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/woningen" 
+            element={
+              <PrivateRoute requiredRole="admin">
+                <Woningen />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/userpage" 
+            element={
+              <PrivateRoute requiredRole="admin">
+                <Userpage />
+              </PrivateRoute>
+            } 
+          />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/over" element={<Over />} />
+          <Route path="/compare/:id" element={<Compare />} />
         </Routes>
       </div>
     </Router>

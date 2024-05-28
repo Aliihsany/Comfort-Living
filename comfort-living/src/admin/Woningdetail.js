@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import './Woningdetail.css';
+import './css/Woningdetail.css';
 import Sidebar from './Sidebar';
 
 const WoningDetails = () => {

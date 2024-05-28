@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import TermsPopup from './TermsPopup';
-import './Overons.css';
+import './css/Overons.css';
 
 const Overons = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
