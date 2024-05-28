@@ -63,7 +63,7 @@ const PrivateRoute = ({ children, requiredRole }) => {
   }
 
   if (requiredRole && userStatus.role !== requiredRole) {
-    console.log('User role does not match required role:', userStatus.role); // Debug line
+    console.log('User role does not match required role:', userStatus.role); 
     return <Navigate to="/unauthorized" />;
   }
 

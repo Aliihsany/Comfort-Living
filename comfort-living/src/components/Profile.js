@@ -3,7 +3,7 @@ import axios from 'axios';
 import './css/Profile.css';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import Header from './Header';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -56,7 +56,6 @@ const Profile = () => {
             jaarinkomen: data.jaarinkomen,
             voorkeur: data.voorkeur,
             straal: data.straal
-            
           });
         } else {
           setError('Error fetching data');
@@ -159,43 +158,28 @@ const Profile = () => {
     }
   };
 
-  const handlepandDelete = async (residenceId) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this signup?');
+  const handleResidenceDelete = async (residenceId) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this residence?');
     if (!confirmDelete) {
       return;
     }
 
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.delete('http://localhost:3001/signup-residence', {
+      const response = await axios.delete(`http://localhost:3001/signup-residence/${residenceId}`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
-        },
-        data: { residenceId }
+        }
       });
       if (response.status === 200) {
-        alert('Successfully deleted residence signup');
+        toast.success('Successfully deleted residence signup');
         setResidences(residences.filter(residence => residence.id !== residenceId));
       } else {
-        alert('Failed to delete residence signup');
+        toast.error('Failed to delete residence signup');
       }
     } catch (err) {
-      alert('Error deleting residence signup');
-    }
-  };
-
-  useEffect(() => {
-    fetchResidences();
-  }, []);
-
-  const fetchResidences = async () => {
-    try {
-      const response = await fetch('http://localhost:3001/panden');
-      const data = await response.json();
-      setResidences(data);
-    } catch (error) {
-      console.error('Error fetching residences:', error);
+      toast.error('Error deleting residence signup');
     }
   };
 
@@ -233,23 +217,21 @@ const Profile = () => {
             </div>
           ))}
           <button type="submit">Update Profiel</button>
-          <button type="button" className="delete-button" onClick={handlepandDelete}>
+          <button type="button" className="delete-button" onClick={handleDelete}>
             Delete Profiel
           </button>
         </form>
 
-        
         <br></br>
-        <h2>Ingeschreven Wonigen</h2>
+        <h2>Ingeschreven Woningen</h2>
         <div className="residences-list">
-          
           {residences.map((residence) => (
             <div key={residence.id} className="residence-item">
               <div className="residence-header">
                 <h3><a href={`/woning/${residence.id}`}>{residence.naam}</a></h3>
                 <FaTrash
                   className="delete-icon"
-                  onClick={() => handleDelete(residence.id)}
+                  onClick={() => handleResidenceDelete(residence.id)}
                 />
               </div>
               <p>{residence.beschrijving}</p>
@@ -257,7 +239,6 @@ const Profile = () => {
               <p><strong>Huurkosten:</strong> €{residence.huurkosten}</p>
               <p><strong>Servicekosten:</strong> €{residence.servicekosten}</p>
               <p><strong>Energielabel:</strong> {residence.energielabel}</p>
-              
             </div>
           ))}
         </div>

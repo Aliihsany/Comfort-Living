@@ -28,8 +28,7 @@ const WoningDetails = () => {
         await fetch(`http://localhost:3001/panden/${id}`, {
           method: 'DELETE',
         });
-        // Optioneel: je kunt de gebruiker doorsturen naar een andere pagina na verwijdering
-        window.location.href = '/'; // Doorsturen naar de homepagina
+        window.location.href = '/'; 
       } catch (error) {
         console.error('Fout bij het verwijderen van de woning:', error);
       }
@@ -58,6 +57,7 @@ const WoningDetails = () => {
           {residence.afbeelding_3 && <img src={residence.afbeelding_3} alt="Afbeelding 3" />}
         </div>
         <p><strong>Beschrijving:</strong> {residence.beschrijving}</p>
+        <button type='submit' onClick={handleDeleteResidence}>Verwijderen</button>
       </div>
     </div>
   );

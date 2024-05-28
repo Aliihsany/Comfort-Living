@@ -547,10 +547,7 @@ app.delete('/users/:id', (req, res) => {
   const userId = req.params.id;
   const query = 'DELETE FROM users WHERE id = ?';
 
-  const sqlUpdateUser = 'UPDATE users SET voornaam = ?, achternaam = ?, geboortedatum = ?, woonadres = ?, telefoonnummer = ?, jaarinkomen = ?, voorkeur = ?, straal = ?, email = ? WHERE id = ?';
-  const sqlUpdateGegevens = 'UPDATE gegevens SET voornaam = ?, achternaam = ?, geboortedatum = ?, woonadres = ?, telefoonnummer = ?, jaarinkomen = ?, voorkeur = ?, straal = ?, email = ? WHERE email = ?';
-
-  db.query(sqlUpdateUser, [voornaam, achternaam, geboortedatum, woonadres, telefoonnummer, jaarinkomen, voorkeur, straal, email, userId], (err, result) => {
+  db.query(query, [userId], (err, result) => {
     if (err) {
       console.error('Error deleting user:', err);
       return res.status(500).json({ error: 'Error deleting user' });
@@ -582,16 +579,13 @@ app.delete('/panden/:id', (req, res) => {
   });
 });
 
-// PUT endpoint for updating residence details
 app.put('/panden/:id', (req, res) => {
   const residenceId = req.params.id;
   const { naam, kamerindeling, huurkosten, servicekosten, energielabel, locatie, type, straal, beschrijving, afbeelding_1, afbeelding_2, afbeelding_3 } = req.body;
 
-  // Query to update residence details in the database
   const query = 'UPDATE panden SET naam = ?, kamerindeling = ?, huurkosten = ?, servicekosten = ?, energielabel = ?, locatie = ?, type = ?, straal = ?, beschrijving = ?, afbeelding_1 = ?, afbeelding_2 = ?, afbeelding_3 = ? WHERE id = ?';
   const values = [naam, kamerindeling, huurkosten, servicekosten, energielabel, locatie, type, straal, beschrijving, afbeelding_1, afbeelding_2, afbeelding_3, residenceId];
 
-  // Execute the query to update residence details
   db.query(query, values, (err, result) => {
     if (err) {
       console.error('Error updating residence details:', err);
@@ -691,9 +685,9 @@ app.get('/compare/:id', (req, res) => {
   });
 });
 
-app.delete('/signup-residence', verifyToken, (req, res) => {
+app.delete('/signup-residence/:residenceId', verifyToken, (req, res) => {
   const userId = req.user.id;
-  const { residenceId } = req.body;
+  const { residenceId } = req.params;
 
   const sql = 'DELETE FROM user_residences WHERE user_id = ? AND residence_id = ?';
   
@@ -713,64 +707,6 @@ app.delete('/signup-residence', verifyToken, (req, res) => {
   });
 });
 
-app.delete('/users/:id', verifyToken, (req, res) => {
-  const { id } = req.params;
-  
-  const emailQuery = 'SELECT email FROM users WHERE id = ?';
-  const deleteQuery = 'DELETE FROM users WHERE id = ?';
-
-  db.query(emailQuery, [id], (err, results) => {
-    if (err) {
-      console.error('Error fetching user email:', err);
-      return res.status(500).send('Error deleting user');
-    }
-
-    if (results.length === 0) {
-      return res.status(404).send('User not found');
-    }
-
-    const email = results[0].email;
-
-    db.query(deleteQuery, [id], (err, result) => {
-      if (err) {
-        console.error('Error deleting user:', err);
-        return res.status(500).send('Error deleting user');
-      }
-
-      if (result.affectedRows === 0) {
-        return res.status(404).send('User not found');
-      }
-
-      sendDeletionNotificationEmail(email);
-      res.status(200).send('User deleted successfully');
-    });
-  });
-});
-
-app.get('/users/me/residences', verifyToken, (req, res) => {
-  const userId = req.user.id;
-  const sql = 'SELECT r.id, r.naam, r.beschrijving, r.locatie, r.huurkosten, r.servicekosten, r.energielabel FROM user_residences ur JOIN panden r ON ur.residence_id = r.id WHERE ur.user_id = ?';
-
-  db.query(sql, [userId], (err, results) => {
-    if (err) {
-      console.error('Error fetching residences:', err);
-      res.status(500).send('Server error');
-      return;
-    }
-
-    db.query(sqlUpdateGegevens, [voornaam, achternaam, geboortedatum, woonadres, telefoonnummer, jaarinkomen, voorkeur, straal, email, email], (err, result) => {
-      if (err) {
-        console.error('Error updating gegevens:', err);
-        res.status(500).send('Server error');
-        return;
-      }
-
-      res.status(200).send('Profile updated successfully');
-    });
-  });
-});
-
-
 app.delete('/users/me', verifyToken, (req, res) => {
   const userId = req.user.id;
 
@@ -789,6 +725,21 @@ app.delete('/users/me', verifyToken, (req, res) => {
     }
 
     res.status(200).send('User deleted successfully');
+  });
+});
+
+app.get('/users/me/residences', verifyToken, (req, res) => {
+  const userId = req.user.id;
+  const sql = 'SELECT r.id, r.naam, r.beschrijving, r.locatie, r.huurkosten, r.servicekosten, r.energielabel FROM user_residences ur JOIN panden r ON ur.residence_id = r.id WHERE ur.user_id = ?';
+
+  db.query(sql, [userId], (err, results) => {
+    if (err) {
+      console.error('Error fetching residences:', err);
+      res.status(500).send('Server error');
+      return;
+    }
+
+    res.json(results);
   });
 });
 
