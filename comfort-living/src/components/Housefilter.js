@@ -70,10 +70,10 @@ const Housefilter = ({ onFilterChange }) => {
         <label>Type woning:</label>
         <select name="type" value={filter.type} onChange={handleChange}>
           <option value="">Selecteer type woning</option>
-          <option value="appartement">Appartement</option>
-          <option value="huis">Huis</option>
-          <option value="studio">Studio</option>
-          <option value="villa">Villa</option>
+          <option value="Appartement">Appartement</option>
+          <option value="Huis">Huis</option>
+          <option value="Studio">Studio</option>
+          <option value="Villa">Villa</option>
         </select>
       </div>
       <button onClick={handleFilterClick}>Filter</button>
